@@ -3,7 +3,7 @@
 ## Source code Links
 *Paste all source code links below*
 ---
-[Acadea](https://github.com/acadea/course_frontend_javascript_intro/tree/master/ep10-speed_typing_game)
+[Acadea](https://github.com/acadea/course_frontend_javascript_intro/tree/master/ep10-speed_typing_game)<br>
 [Falling Words](https://github.com/toyamarodrigo/falling-words-game?fbclid=IwAR2BNLPIglhNovb3g1ba2aV8nztrpKOlBGHgZNhgQ_SJQWum3McKhXtNGG4)
 
 ## Game features
