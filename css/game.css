@@ -7,6 +7,10 @@ h6 {
   padding: 0.5rem 0 !important;
 }
 
+body {
+  background-image: url('../images/game_background_play.png');
+}
+
 .wrapper {
   max-width: 600px;
   margin-top: 40px;

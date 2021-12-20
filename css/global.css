@@ -12,6 +12,7 @@
 
 body {
   font-family: 'xengalaxy';
+  color:white;
   background-image: url('../images/game_background.png');
   background-repeat: no-repeat;
   background-size: cover;
@@ -48,4 +49,10 @@ p {
   background-color: rgba(192, 125, 255, 0.63);
   color: rgb(238, 255, 0) !important;
   transform: translateY(-4px);
+}
+
+/* Buttons */
+
+.transparent {
+  border: none;
 }
