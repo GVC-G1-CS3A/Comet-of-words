@@ -1,33 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Commet of Words</title>
-	<style>
-		#canvas {
-			border: 1px solid black;
-			/* center align */
-			display: block;
-			width: 900px;
-			height: 600px;
-			margin: 0 auto;
-		}
-	</style>
+
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Vendor CSS Files -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS Files -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/game.css" />
+
+  <title>Commet of Words | Gameplay</title>
+
+  <style>
+      #canvas{
+        border: 1px solid black;
+        /* center align */
+        display: block;
+        width: 900px;
+        height: 500px;
+        margin: 0 auto;
+      }
+    </style>
+
 </head>
 
 <body>
 
-	<canvas id="canvas" width="900" height="600">
+  <main>
 
-		THIS IS FALLBACK MESSAGE FOR OLD BROWSERS
+    <div class="d-flex flex-wrap p-4">
 
-		YOUR BROWSER IS NOT SUPPORTING CANVAS
+      <div class="col-12 d-flex align-self-end justify-content-between mb-5">
+        <!-- Logo -->
+        <div class="col-2">
+          <a href="index.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+                src="images/game_logo.png" alt=""></button></a>
+        </div>
 
-	</canvas>
+        <div id="Score" class="h1 pe-5">Score</div>
+      </div>
 
-	<script src="word.js"></script>
-	<script src="app.js"></script>
+      <div class="col-12 d-flex align-self-center justify-content-center">
+        <div id="Level" class="h1">Level</div>
+      </div>
+
+      <div class="col-12 d-flex align-self-center justify-content-center">
+          <canvas id="canvas">
+
+              THIS IS FALLBACK MESSAGE FOR OLD BROWSERS
+        
+              YOUR BROWSER IS NOT SUPPORTING CANVAS
+        
+          </canvas>
+      </div>
+
+      <div class="col-12 d-flex align-self-end justify-content-center">
+        <form class="form-group" autocomplete="off" onsubmit="getWord(); return false">
+          <input type="text" id="InputWord" class="form-control form-control-lg" autofocus />
+          <input type="submit" hidden />
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Vendor JS Files -->
+  <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+
+  <!-- Custom JS Files -->
+
 </body>
 
 </html>

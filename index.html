@@ -2,15 +2,19 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Vendor CSS Files -->
   <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- Custom CSS Files -->
   <link rel="stylesheet" href="css/global.css" />
-  <link rel="stylesheet" href="css/index.css" />
+
   <title>Commet of Words</title>
+  
 </head>
 
 <body>
@@ -23,27 +27,26 @@
     <div class="d-flex justify-content-center flex-wrap pt-5">
 
       <!-- Logo -->
-      <div class="col-6 m-3">
-        <img src="images/game_logo.png" class="img-fluid" alt="logo" />
+      <div class="col-10 col-md-5 m-3">
+        <a href="index.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+              src="images/game_logo.png" alt=""></button></a>
       </div>
 
       <!-- Modes Button -->
-      <div class="col-10 row d-flex justify-content-center">
+      <div class="col-12 d-flex justify-content-center mb-5">
 
-        <div class="col-5">
-          <input type="image" src="images/game_button_easy.png" class="img-fluid" id="Easy" value="3000" onclick="buttonValue(this.id)" />
+        <div class="col-10 col-md-5">
+          <a href="level_modes.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+                src="images/game_button_play.png" alt=""></button></a>
         </div>
 
-        <div class="col-5">
-            <input type="image" src="images/game_button_medium.png" class="img-fluid" id="Medium" value="2000" onclick="buttonValue(this.id)"/>
-        </div>
+      </div>
 
-        <div class="col-5">
-            <input type="image" src="images/game_button_hard.png" class="img-fluid" id="Hard" value="1000" onclick="buttonValue(this.id)"/>
-        </div>
+      <div class="col-12 d-flex justify-content-center">
 
-        <div class="col-5">
-            <input type="image" src="images/game_button_extreme.png" class="img-fluid" id="Hard" value="400" onclick="buttonValue(this.id)"/>
+        <div class="col-10 col-md-5">
+          <a href="instructions.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+                src="images/game_button_instructions.png" alt=""></button></a>
         </div>
 
       </div>
@@ -54,25 +57,6 @@
 
   <!-- Vendor JS Files -->
   <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
-
-  <!-- <audio src="./sound/menusound.mp3" id="MenuSound" type="audio/mp3"></audio>
-    <audio id="HomeSound" autoplay loop controls>
-      <source src="./sound/homesound.mp3" type="audio/mp3" />
-    </audio>
-    <script src="./sound-buttons.js"></script> -->
-
-  <script>
-    // PASS THROUGH HTTP GET LEVEL SELECTED
-    function buttonValue(btnID) {
-      const params = new URLSearchParams();
-      const btnValue = document.getElementById(btnID).value;
-      params.append('lvl', btnValue);
-      window.location.href = `game.html?${params.toString()}`;
-    }
-    // DEFAULT VOLUME HOME SONG
-    const homeSound = document.getElementById('HomeSound');
-    homeSound.volume = 0.55;
-  </script>
 
 </body>
 
