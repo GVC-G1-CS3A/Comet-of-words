@@ -1,7 +1,5 @@
 var debugFlag = false;
 var debugDrawFlag = false;
-var score = document.getElementById("Score");
-var start_play = document.getElementById("start_play");
 
 var asteroid1 = new Image(25, 25);
 var asteroid2 = new Image(25, 25);
@@ -16,6 +14,14 @@ asteroid3.src = "./images/asteroid-3.png";
 asteroid4.src = "./images/asteroid-4.png";
 asteroid5.src = "./images/asteroid-5.png";
 asteroid6.src = "./images/asteroid-6.png";
+
+//DOM ELEMENTS
+const start_play = document.getElementById("start_play");
+const scoreElementID = document.getElementById('Score');
+const scoreElementClass = document.getElementsByClassName('score');
+const pointingElementID = document.getElementById('Pointing');
+const pointingElementClass = document.getElementsByClassName('pointing');
+const inputElementID = document.getElementById('InputWord');
 
 function debugLog() {
     console.log("Debug Logged!");
@@ -40,9 +46,10 @@ function gameController(canvas) {
     this.gameRunning = true;
     this.canvas = canvas;
     this.wpm = 30;
-    this.wordContainer = [];
+    this.wordContainer = []; //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
+    this.wordTextContainer = []; //text only
     this.currentWord = '';
-    this.buffer = '';
+    //this.buffer = '';
     this.score = 0;
     this.health = 100;
     this.clears = 0;
@@ -83,7 +90,7 @@ function wordObj(text, x, y) {
 //     downpour(false);
 // }
 
-gameController.prototype.addWord = function () {
+gameController.prototype.addWord = function() {
     if (this == window) {
         var that = controller; //SUPER HOKEY way to avoid setTimeout from using global window context...
     } else {
@@ -111,9 +118,11 @@ gameController.prototype.addWord = function () {
 
     var x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
 
-    var word = new wordObj(text, x, 30);
+    var word = new wordObj(text.toLowerCase(), x, 30);
 
-    that.wordContainer.push(word);
+    that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
+    that.wordTextContainer.push(word.text);
+    //console.log(that.wordTextContainer.toString());
 
     //Override time if not special
     timeUntilNextWord = ((60 / that.wpm) * 1000) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
@@ -140,7 +149,7 @@ function mainLoop() {
         then = now - (elapsed % fpsInterval);
 
         updatePositions(controller); //Update all word locations!
-        updateWords(controller); //Checks for completed words
+        //updateWords(controller); //Checks for completed words
         draw(controller); //Draw to the screen!
         if (controller.health <= 0) { gameOver(); } //Run game over if health is 0
 
@@ -184,31 +193,78 @@ function updatePositions(gameController) {
     }
 }
 
-function updateWords(gameController) {
-    var wordsArr = gameController.wordContainer;
+// function updateWords(gameController) {
+//     var wordsArr = gameController.wordContainer;
 
-    for (var i = 0; i < wordsArr.length; i++) {
-        var currentWord = wordsArr[i];
-        if (currentWord === undefined) {
-            return; //Catch errors
-        }
-        if (currentWord.text == gameController.buffer) { // If complete buffer word found in array
-            wordsArr.splice(i, 1);
-            console.log(currentWord.text + ' = ' + currentWord.text.length);
-            gameController.score += currentWord.value * gameController.scoreMultiplier;
-            gameController.wpm += (currentWord.value / 10);
-            // if (gameController.buffer == "CLEAR") {
-            //     gameController.clears++;
-            // }
-            // if (gameController.buffer == "MODIFIER") {
-            //     gameController.modChance = 0;
-            //     // randomModifier(gameController);
-            // }
-            console.log("Buffer: " + gameController.buffer);
-            gameController.buffer = ''; //Reset buffer
-            return;
-        }
+//     for (var i = 0; i < wordsArr.length; i++) {
+//         var currentWord = wordsArr[i];
+//         if (currentWord === undefined) {
+//             return; //Catch errors
+//         }
+//         if (currentWord.text == gameController.buffer) { // If complete buffer word found in array
+//             wordsArr.splice(i, 1);
+//             console.log(currentWord.text + ' = ' + currentWord.text.length);
+//             //gameController.score += currentWord.value * gameController.scoreMultiplier; // get the char lenght as score
+//             gameController.wpm += (currentWord.value / 10);
+//             // if (gameController.buffer == "CLEAR") {
+//             //     gameController.clears++;
+//             // }
+//             // if (gameController.buffer == "MODIFIER") {
+//             //     gameController.modChance = 0;
+//             //     // randomModifier(gameController);
+//             // }
+//             updateScore(currentWord.text.length, gameController, 1);
+//             currentWord.text = '';
+//             //console.log("Buffer: " + gameController.buffer);
+//             gameController.buffer = ''; //Reset buffer
+//             return;
+//         } else {
+//             updateScore(currentWord.text.length, gameController, 0);
+//             //console.log("Buffer: " + gameController.buffer);
+//         }
+//     }
+// }
+
+//* function getWord(txtElement) {
+//     var inputValue = inputElementID.value.toLowerCase();
+//     //console.log(inputValue);
+
+//     var wordsArr = controller.wordTextContainer;
+//     if (wordsArr.includes(txtElement)) {
+//         console.log(txtElement + " is included in array");
+//     } else {
+//         console.log(txtElement + " is NOT included in array");
+//     }
+//     //console.log(controller.wordTextContainer.length);
+//     inputElementID.value = '';
+// }
+
+function updateScore(wordLength, status) {
+    const addPoints = [3, 4, 5];
+    const lossPoints = [1, 2, 3];
+
+    if (wordLength >= 3 && wordLength <= 4) {
+        index = 0;
+    } else if (wordLength >= 5 && wordLength <= 8) {
+        index = 1;
+    } else {
+        index = 2;
     }
+
+    var pointingStatus;
+    //0=incorrect, 1=correct
+    if (status == 1) {
+        controller.score += addPoints[index];
+        //console.log('Wordlength: ' + wordLength + ' = Add ' + addPoints[index] + ' pts');
+        pointingStatus = `+${addPoints[index]} points`;
+    } else {
+        controller.score -= lossPoints[index];
+        //console.log('Wordlength: ' + wordLength + ' = Loss ' + lossPoints[index] + ' pts');
+        pointingStatus = `-${lossPoints[index]} points`;
+    }
+    console.log(controller.score);
+    pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
+    scoreElementID.innerHTML = `<p>Score: ${controller.score}</p>`;
 }
 
 function draw(gameController) {
@@ -264,10 +320,10 @@ function draw(gameController) {
     if (debugFlag) {
         // ctx.strokeText(gameController.buffer, 10, gameController.canvas.height - 100);
         // ctx.strokeText("Score: " + String(gameController.score), 200, gameController.canvas.height - 100)
-        score.innerText = "Score: " + String(gameController.score);
+        //score.innerText = "Score: " + String(gameController.score);
     } else {
         // ctx.strokeText("Score: " + String(gameController.score), 10, gameController.canvas.height - 100)
-        score.innerText = "Score: " + String(gameController.score);
+        //score.innerText = "Score: " + String(gameController.score);
     }
     // ctx.strokeText("Clears: " + String(gameController.clears), 10, gameController.canvas.height - 150)
 
@@ -389,7 +445,7 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
@@ -403,9 +459,103 @@ document.onkeypress = function (evt) { // This function will run when any k ey i
     }
 
     if ((controller.gameRunning) && charCode == 32 && controller.clears > 0) { //spacebar
-        useClear(controller);;
+        useClear(controller);
+    }
+
+    if (evt.keyCode == 13) {
+        console.log('ENTER');
+        getWord();
     }
 };
+
+// function updateWords(gameController) {
+//     var wordsArr = gameController.wordContainer;
+
+//     for (var i = 0; i < wordsArr.length; i++) {
+//         var currentWord = wordsArr[i];
+//         if (currentWord === undefined) {
+//             return; //Catch errors
+//         }
+//         if (currentWord.text == gameController.buffer) { // If complete buffer word found in array
+//             wordsArr.splice(i, 1);
+//             console.log(currentWord.text + ' = ' + currentWord.text.length);
+//             //gameController.score += currentWord.value * gameController.scoreMultiplier; // get the char lenght as score
+//             gameController.wpm += (currentWord.value / 10);
+//             // if (gameController.buffer == "CLEAR") {
+//             //     gameController.clears++;
+//             // }
+//             // if (gameController.buffer == "MODIFIER") {
+//             //     gameController.modChance = 0;
+//             //     // randomModifier(gameController);
+//             // }
+//             updateScore(currentWord.text.length, gameController, 1);
+//             currentWord.text = '';
+//             //console.log("Buffer: " + gameController.buffer);
+//             gameController.buffer = ''; //Reset buffer
+//             return;
+//         } else {
+//             //console.log("Buffer: " + gameController.buffer);
+//         }
+//     }
+// }
+
+
+function getWord() {
+    var inputValue = inputElementID.value.toLowerCase();
+    //console.log(inputValue);
+
+    var wordsArrText = controller.wordTextContainer;
+    var wordsArr = controller.wordContainer;
+
+    for (var i = 0; i < wordsArr.length; i++) {
+        var currentWord = wordsArr[i];
+        if (currentWord === undefined) {
+            return; //Catch errors
+        }
+        if (currentWord.text === inputValue.trim()) { // If complete buffer word found in array
+            wordsArr.splice(i, 1);
+            console.log(currentWord.text + ' = ' + currentWord.text.length);
+            //gameController.score += currentWord.value * gameController.scoreMultiplier; // get the char lenght as score
+            gameController.wpm += (currentWord.value / 10);
+            // if (gameController.buffer == "CLEAR") {
+            //     gameController.clears++;
+            // }
+            // if (gameController.buffer == "MODIFIER") {
+            //     gameController.modChance = 0;
+            //     // randomModifier(gameController);
+            // }
+            updateScore(currentWord.text.length, 1);
+            currentWord.text = '';
+            inputElementID.value = '';
+            //console.log("Buffer: " + gameController.buffer);
+            //gameController.buffer = ''; //Reset buffer
+            return;
+        } else {
+            inputElementID.value = '';
+            updateScore(currentWord.text.length, 0);
+            return;
+            //console.log("Buffer: " + gameController.buffer);
+        }
+    }
+
+    //console.log(controller.wordTextContainer.length);
+
+
+}
+
+//* function getWord() {
+//     var inputValue = inputElementID.value.toLowerCase();
+//     //console.log(inputValue);
+
+//     var wordsArrText = controller.wordTextContainer;
+//     if (wordsArrText.includes(inputValue)) {
+//         console.log(inputValue + " is included in array");
+//     } else {
+//         console.log(inputValue + " is NOT included in array");
+//     }
+//     //console.log(controller.wordTextContainer.length);
+//     inputElementID.value = '';
+// }
 
 function addKeyToBuffer(char) {
     var wordsArr = controller.wordContainer;
