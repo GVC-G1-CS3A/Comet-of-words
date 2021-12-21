@@ -16,17 +16,6 @@
 
   <title>Comet of Words | Gameplay</title>
 
-  <style>
-      #canvas{
-        border: 1px solid black;
-        /* center align */
-        display: block;
-        width: 900px;
-        height: 500px;
-        margin: 0 auto;
-      }
-    </style>
-
 </head>
 
 <body>
@@ -49,8 +38,6 @@
         <div id="Level" class="h1">Level</div>
       </div>
 
-<<<<<<< Updated upstream
-=======
       <div class="d-flex justify-content-center">
         <h1>
           Press SPACEBAR to play
@@ -65,22 +52,10 @@
       <img id="asteroid-5" src="images/asteroid-5.png" width="25" height="25">
       <img id="asteroid-6" src="images/asteroid-6.png" width="25" height="25"> -->
 
->>>>>>> Stashed changes
       <div class="col-12 d-flex align-self-center justify-content-center">
-          <canvas id="canvas">
-
-              THIS IS FALLBACK MESSAGE FOR OLD BROWSERS
-        
-              YOUR BROWSER IS NOT SUPPORTING CANVAS
-        
+          <canvas id="canvas" width="900" height="700">
+            Your browser does not support the HTML 5 Canvas.
           </canvas>
-      </div>
-
-      <div class="col-12 d-flex align-self-end justify-content-center">
-        <form class="form-group" autocomplete="off" onsubmit="getWord(); return false">
-          <input type="text" id="InputWord" class="form-control form-control-lg" autofocus />
-          <input type="submit" hidden />
-        </form>
       </div>
 
     </div>
@@ -91,6 +66,8 @@
   <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
 
   <!-- Custom JS Files -->
+  <script src="js/app.js"></script>
+  <script src="js/words.js"></script>
 
 </body>
 
