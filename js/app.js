@@ -1,21 +1,21 @@
 var debugFlag = false;
 var debugDrawFlag = false;
 var score = document.getElementById("Score");
+var start_play = document.getElementById("start_play");
 
-var asteroid1 = document.getElementById("asteroid-1");
-console.log(asteroid1);
-// var asteroid2 = new Image(25, 25);
-// var asteroid3 = new Image(25, 25);
-// var asteroid4 = new Image(25, 25);
-// var asteroid5 = new Image(25, 25);
-// var asteroid6 = new Image(25, 25);
+var asteroid1 = new Image(25, 25);
+var asteroid2 = new Image(25, 25);
+var asteroid3 = new Image(25, 25);
+var asteroid4 = new Image(25, 25);
+var asteroid5 = new Image(25, 25);
+var asteroid6 = new Image(25, 25);
 
-// asteroid1.src = "./images/asteroid-1.png";
-// asteroid2.src = "./images/asteroid-2.png";
-// asteroid3.src = "./images/asteroid-3.png";
-// asteroid4.src = "./images/asteroid-4.png";
-// asteroid5.src = "./images/asteroid-5.png";
-// asteroid6.src = "./images/asteroid-6.png";
+asteroid1.src = "./images/asteroid-1.png";
+asteroid2.src = "./images/asteroid-2.png";
+asteroid3.src = "./images/asteroid-3.png";
+asteroid4.src = "./images/asteroid-4.png";
+asteroid5.src = "./images/asteroid-5.png";
+asteroid6.src = "./images/asteroid-6.png";
 
 function debugLog() {
     console.log("Debug Logged!");
@@ -50,13 +50,13 @@ function gameController(canvas) {
     this.modChance = 5;
     this.scoreMultiplier = 1;
 
-    this.doubleTime = false;
-    this.slowMo = false;
-    this.downpour = false;
-    this.cascade = false;
-    this.overload = false;
-    this.blur = false;
-    this.upPour = false;
+    // this.doubleTime = false;
+    // this.slowMo = false;
+    // this.downpour = false;
+    // this.cascade = false;
+    // this.overload = false;
+    // this.blur = false;
+    // this.upPour = false;
 
 }
 
@@ -66,11 +66,11 @@ function wordObj(text, x, y) {
     this.x = x;
     this.y = y;
     this.speed = (Math.random() * (controller.score / 100)) + 1; //Using globals again... (Laziness > desire for good practice) : True
-    if (Math.random() > 0.5) {
-        this.cascadeDir = 3;
-    } else {
-        this.cascadeDir = -3;
-    }
+    // if (Math.random() > 0.5) {
+    //     this.cascadeDir = 3;
+    // } else {
+    //     this.cascadeDir = -3;
+    // }
 }
 // gameController.prototype.resetModifiers = function() {
 //     this.doubleTime = false;
@@ -83,7 +83,7 @@ function wordObj(text, x, y) {
 //     downpour(false);
 // }
 
-gameController.prototype.addWord = function() {
+gameController.prototype.addWord = function () {
     if (this == window) {
         var that = controller; //SUPER HOKEY way to avoid setTimeout from using global window context...
     } else {
@@ -92,19 +92,19 @@ gameController.prototype.addWord = function() {
 
     var timeUntilNextWord = ((60 / that.wpm) * 1000)
 
-    if (Math.random() < (that.clearChance / 100)) { //Roll for clear chance
-        var word = new wordObj("CLEAR", Math.floor(Math.random() * (that.canvas.width - 300)), 30);
-        that.wordContainer.push(word);
-        window.setTimeout(that.addWord, timeUntilNextWord);
-        return word;
-    }
+    // if (Math.random() < (that.clearChance / 100)) { //Roll for clear chance
+    //     var word = new wordObj("CLEAR", Math.floor(Math.random() * (that.canvas.width - 300)), 30);
+    //     that.wordContainer.push(word);
+    //     window.setTimeout(that.addWord, timeUntilNextWord);
+    //     return word;
+    // }
     // if (Math.random() < (that.modChance / 100)) { //Roll for modifier. If failed, up the chance!
     //     var word = new wordObj("MODIFIER", Math.floor(Math.random() * (that.canvas.width - 300)), 30);
     //     that.wordContainer.push(word);
     //     window.setTimeout(that.addWord, timeUntilNextWord);
     //     return word;
     // } 
-    else { that.modChance++; }
+    // else { that.modChance++; }
 
     var lengthOfArr = fullWordListArr.length;
     var text = fullWordListArr[Math.floor(Math.random() * lengthOfArr)]; //Grab a random word from wordlist in words.js
@@ -131,10 +131,10 @@ gameController.prototype.addWord = function() {
 //Main program loop
 function mainLoop() {
     requestAnimationFrame(mainLoop);
-
     now = Date.now();
     elapsed = now - then; // if enough time has elapsed, draw the next frame
     if (elapsed > fpsInterval) {
+        4
         // Get ready for next frame by setting then=now, but also adjust for 
         // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
         then = now - (elapsed % fpsInterval);
@@ -146,6 +146,7 @@ function mainLoop() {
 
         if (controller.gameRunning) {
             requestAnimationFrame(mainLoop); //Loop again when browser is ready. 60FPS if possible
+            start_play.innerText = "";
         }
     }
 }
@@ -164,16 +165,17 @@ function updatePositions(gameController) {
 
         currentWord.y += currentWord.speed * multiplier;
 
-        if (gameController.cascade) {
-            currentWord.x += currentWord.cascadeDir;
-            if (currentWord.x > gameController.canvas.width - 100 || currentWord.x < 10) {
-                currentWord.cascadeDir = (currentWord.cascadeDir * -2);
-                if (currentWord.cascadeDir > 20 || currentWord.cascadeDir < -20) {
-                    currentWord.cascadeDir = currentWord.cascadeDir * 0.5;
-                }
-            }
-        }
+        // if (gameController.cascade) {
+        //     currentWord.x += currentWord.cascadeDir;
+        //     if (currentWord.x > gameController.canvas.width - 100 || currentWord.x < 10) {
+        //         currentWord.cascadeDir = (currentWord.cascadeDir * -2);
+        //         if (currentWord.cascadeDir > 20 || currentWord.cascadeDir < -20) {
+        //             currentWord.cascadeDir = currentWord.cascadeDir * 0.5;
+        //         }
+        //     }
+        // }
 
+        // word if it reaches the bottom
         if (currentWord.y >= gameController.canvas.height - 10) {
             gameController.health -= currentWord.value;
             wordsArr.splice(i, 1);
@@ -195,13 +197,14 @@ function updateWords(gameController) {
             console.log(currentWord.text + ' = ' + currentWord.text.length);
             gameController.score += currentWord.value * gameController.scoreMultiplier;
             gameController.wpm += (currentWord.value / 10);
-            if (gameController.buffer == "CLEAR") {
-                gameController.clears++;
-            }
-            if (gameController.buffer == "MODIFIER") {
-                gameController.modChance = 0;
-                randomModifier(gameController);
-            }
+            // if (gameController.buffer == "CLEAR") {
+            //     gameController.clears++;
+            // }
+            // if (gameController.buffer == "MODIFIER") {
+            //     gameController.modChance = 0;
+            //     // randomModifier(gameController);
+            // }
+            console.log("Buffer: " + gameController.buffer);
             gameController.buffer = ''; //Reset buffer
             return;
         }
@@ -216,7 +219,11 @@ function draw(gameController) {
     ctx.font = "30px Arial";
     ctx.strokeStyle = '#FFFFFF';
     ctx.fillStyle = 'white';
-    ctx.drawImage(asteroid1, 0, 0, 5, 5, 0, 0, 10, 10);
+
+    asteroid1.onload = function() {
+        ctx.drawImage(asteroid1, 20, 20);
+        console.log("draw image");
+    }
 
     if (gameController.blur) { canvas.style.webkitFilter = "blur(2px)"; } //Blur effect!
     else {
@@ -262,7 +269,7 @@ function draw(gameController) {
         // ctx.strokeText("Score: " + String(gameController.score), 10, gameController.canvas.height - 100)
         score.innerText = "Score: " + String(gameController.score);
     }
-    ctx.strokeText("Clears: " + String(gameController.clears), 10, gameController.canvas.height - 150)
+    // ctx.strokeText("Clears: " + String(gameController.clears), 10, gameController.canvas.height - 150)
 
     // Modifiers
     // ctx.strokeStyle = '#FFFF00';
@@ -382,7 +389,7 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
