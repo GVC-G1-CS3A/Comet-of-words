@@ -22,37 +22,21 @@ body {
   width: 100vw;
 }
 
-input {
-  margin-top: 50px;
-}
-
-p {
-  margin-bottom: 0;
-}
-
-/*** Navbar ***/
-
-.navbar {
-  padding-top: 30px;
-}
-
-.nav-link,
-.navbar-brand {
-  color: white;
-}
-
-.nav-link {
-  transition: all 0.5s;
-}
-
-.nav-link:hover {
-  background-color: rgba(192, 125, 255, 0.63);
-  color: rgb(238, 255, 0) !important;
-  transform: translateY(-4px);
-}
-
 /* Buttons */
 
 .transparent {
   border: none;
+}
+
+/* Card */
+
+.card {
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  border-radius: 25px;
+}
+
+/* Game Background */
+
+#game_background_play {
+  background-image: url('../images/game_background_play.png');
 }
