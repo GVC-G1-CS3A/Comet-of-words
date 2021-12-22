@@ -29,16 +29,6 @@ function debugLog() {
 
 function setupCanvas() {
     var canvas = document.getElementById("canvas");
-    // var width = getWidth() - 7;
-    // var height = getHeight() - 7;
-
-    // if (debugFlag) {
-    //     console.log("Window height found to be: " + height)
-    //     console.log("Window width found to be: " + width)
-    // }
-    // canvas.width = width;
-    // canvas.height = height;
-
     return canvas;
 }
 
@@ -56,15 +46,6 @@ function gameController(canvas) {
     this.clearChance = 5;
     this.modChance = 5;
     this.scoreMultiplier = 1;
-
-    // this.doubleTime = false;
-    // this.slowMo = false;
-    // this.downpour = false;
-    // this.cascade = false;
-    // this.overload = false;
-    // this.blur = false;
-    // this.upPour = false;
-
 }
 
 function wordObj(text, x, y) {
@@ -73,22 +54,7 @@ function wordObj(text, x, y) {
     this.x = x;
     this.y = y;
     this.speed = (Math.random() * (controller.score / 100)) + 1; //Using globals again... (Laziness > desire for good practice) : True
-    // if (Math.random() > 0.5) {
-    //     this.cascadeDir = 3;
-    // } else {
-    //     this.cascadeDir = -3;
-    // }
 }
-// gameController.prototype.resetModifiers = function() {
-//     this.doubleTime = false;
-//     this.slowMo = false;
-//     this.downpour = false;
-//     this.overload = false;
-//     this.blur = false;
-//     this.cascade = false;
-//     this.upPour = false;
-//     downpour(false);
-// }
 
 gameController.prototype.addWord = function() {
     if (this == window) {
@@ -99,19 +65,6 @@ gameController.prototype.addWord = function() {
 
     var timeUntilNextWord = ((60 / that.wpm) * 1000)
 
-    // if (Math.random() < (that.clearChance / 100)) { //Roll for clear chance
-    //     var word = new wordObj("CLEAR", Math.floor(Math.random() * (that.canvas.width - 300)), 30);
-    //     that.wordContainer.push(word);
-    //     window.setTimeout(that.addWord, timeUntilNextWord);
-    //     return word;
-    // }
-    // if (Math.random() < (that.modChance / 100)) { //Roll for modifier. If failed, up the chance!
-    //     var word = new wordObj("MODIFIER", Math.floor(Math.random() * (that.canvas.width - 300)), 30);
-    //     that.wordContainer.push(word);
-    //     window.setTimeout(that.addWord, timeUntilNextWord);
-    //     return word;
-    // } 
-    // else { that.modChance++; }
 
     var lengthOfArr = fullWordListArr.length;
     var text = fullWordListArr[Math.floor(Math.random() * lengthOfArr)]; //Grab a random word from wordlist in words.js
@@ -121,7 +74,7 @@ gameController.prototype.addWord = function() {
     var word = new wordObj(text.toLowerCase(), x, 30);
 
     that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
-    that.wordTextContainer.push(word.text);
+    that.wordTextContainer.push(word.text); //push ONLY the text properties of the object
     //console.log(that.wordTextContainer.toString());
 
     //Override time if not special
@@ -149,7 +102,6 @@ function mainLoop() {
         then = now - (elapsed % fpsInterval);
 
         updatePositions(controller); //Update all word locations!
-        //updateWords(controller); //Checks for completed words
         draw(controller); //Draw to the screen!
         if (controller.health <= 0) { gameOver(); } //Run game over if health is 0
 
@@ -162,6 +114,7 @@ function mainLoop() {
 
 function updatePositions(gameController) {
     var wordsArr = gameController.wordContainer;
+    var wordsArrText = gameController.wordTextContainer;
     var multiplier = 1.0;
     if (gameController.doubleTime) { multiplier = multiplier * 1.25; }
     if (gameController.slowMo) { multiplier = multiplier / 2; }
@@ -174,97 +127,14 @@ function updatePositions(gameController) {
 
         currentWord.y += currentWord.speed * multiplier;
 
-        // if (gameController.cascade) {
-        //     currentWord.x += currentWord.cascadeDir;
-        //     if (currentWord.x > gameController.canvas.width - 100 || currentWord.x < 10) {
-        //         currentWord.cascadeDir = (currentWord.cascadeDir * -2);
-        //         if (currentWord.cascadeDir > 20 || currentWord.cascadeDir < -20) {
-        //             currentWord.cascadeDir = currentWord.cascadeDir * 0.5;
-        //         }
-        //     }
-        // }
-
         // word if it reaches the bottom
         if (currentWord.y >= gameController.canvas.height - 10) {
             gameController.health -= currentWord.value;
             wordsArr.splice(i, 1);
+            wordsArrText.splice(i, 1);
             if (currentWord.text.startsWith(gameController.buffer)) { gameController.buffer = ''; } //Only reset buffer if it is current word
         }
     }
-}
-
-// function updateWords(gameController) {
-//     var wordsArr = gameController.wordContainer;
-
-//     for (var i = 0; i < wordsArr.length; i++) {
-//         var currentWord = wordsArr[i];
-//         if (currentWord === undefined) {
-//             return; //Catch errors
-//         }
-//         if (currentWord.text == gameController.buffer) { // If complete buffer word found in array
-//             wordsArr.splice(i, 1);
-//             console.log(currentWord.text + ' = ' + currentWord.text.length);
-//             //gameController.score += currentWord.value * gameController.scoreMultiplier; // get the char lenght as score
-//             gameController.wpm += (currentWord.value / 10);
-//             // if (gameController.buffer == "CLEAR") {
-//             //     gameController.clears++;
-//             // }
-//             // if (gameController.buffer == "MODIFIER") {
-//             //     gameController.modChance = 0;
-//             //     // randomModifier(gameController);
-//             // }
-//             updateScore(currentWord.text.length, gameController, 1);
-//             currentWord.text = '';
-//             //console.log("Buffer: " + gameController.buffer);
-//             gameController.buffer = ''; //Reset buffer
-//             return;
-//         } else {
-//             updateScore(currentWord.text.length, gameController, 0);
-//             //console.log("Buffer: " + gameController.buffer);
-//         }
-//     }
-// }
-
-//* function getWord(txtElement) {
-//     var inputValue = inputElementID.value.toLowerCase();
-//     //console.log(inputValue);
-
-//     var wordsArr = controller.wordTextContainer;
-//     if (wordsArr.includes(txtElement)) {
-//         console.log(txtElement + " is included in array");
-//     } else {
-//         console.log(txtElement + " is NOT included in array");
-//     }
-//     //console.log(controller.wordTextContainer.length);
-//     inputElementID.value = '';
-// }
-
-function updateScore(wordLength, status) {
-    const addPoints = [3, 4, 5];
-    const lossPoints = [1, 2, 3];
-
-    if (wordLength >= 3 && wordLength <= 4) {
-        index = 0;
-    } else if (wordLength >= 5 && wordLength <= 8) {
-        index = 1;
-    } else {
-        index = 2;
-    }
-
-    var pointingStatus;
-    //0=incorrect, 1=correct
-    if (status == 1) {
-        controller.score += addPoints[index];
-        //console.log('Wordlength: ' + wordLength + ' = Add ' + addPoints[index] + ' pts');
-        pointingStatus = `+${addPoints[index]} points`;
-    } else {
-        controller.score -= lossPoints[index];
-        //console.log('Wordlength: ' + wordLength + ' = Loss ' + lossPoints[index] + ' pts');
-        pointingStatus = `-${lossPoints[index]} points`;
-    }
-    console.log(controller.score);
-    pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
-    scoreElementID.innerHTML = `<p>Score: ${controller.score}</p>`;
 }
 
 function draw(gameController) {
@@ -315,40 +185,39 @@ function draw(gameController) {
     ctx.fillStyle = "green";
     ctx.fillRect(10, gameController.canvas.height - 75, (gameController.health / 100) * (gameController.canvas.width - 40), 35);
     ctx.fillStyle = "#111111"; //Set back for clearing screen? Doesn't work if we dont do this...
-    //
-
-    if (debugFlag) {
-        // ctx.strokeText(gameController.buffer, 10, gameController.canvas.height - 100);
-        // ctx.strokeText("Score: " + String(gameController.score), 200, gameController.canvas.height - 100)
-        //score.innerText = "Score: " + String(gameController.score);
-    } else {
-        // ctx.strokeText("Score: " + String(gameController.score), 10, gameController.canvas.height - 100)
-        //score.innerText = "Score: " + String(gameController.score);
-    }
-    // ctx.strokeText("Clears: " + String(gameController.clears), 10, gameController.canvas.height - 150)
-
-    // Modifiers
-    // ctx.strokeStyle = '#FFFF00';
-    // var pad = 200;
-    // var padPer = 50;
-    // if (gameController.doubleTime) { ctx.strokeText("Double Time", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('Double Time').width + padPer;
-    // if (gameController.slowMo) { ctx.strokeText("Slow Mo", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('Slow Mo').width + padPer;
-    // if (gameController.downpour) { ctx.strokeText("Downpour", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('Downpour').width + padPer;
-    // if (gameController.cascade) { ctx.strokeText("Cascade", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('Cascase').width + padPer;
-    // if (gameController.overload) { ctx.strokeText("Overload", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('Overload').width + padPer;
-    // if (gameController.blur) { ctx.strokeText("Blur", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('Blur').width + padPer;
-    // if (gameController.upPour) { ctx.strokeText("UpPour", pad, gameController.canvas.height - 100); }
-    // pad += ctx.measureText('YpPour').width + padPer;
 
     if (debugDrawFlag) { console.log("Draw Complete.") }
 
-    //rainDraw();
+}
+
+function updateScore(wordLength, status) {
+    const addPoints = [3, 4, 5];
+    const lossPoints = [1, 2, 3];
+
+    if (wordLength >= 1 && wordLength <= 4) {
+        index = 0;
+    } else if (wordLength >= 5 && wordLength <= 8) {
+        index = 1;
+    } else {
+        index = 2;
+    }
+    console.log(wordLength);
+    var pointingStatus;
+    //0=incorrect, 1=correct
+    if (status == 1) {
+        controller.score += addPoints[index];
+        //console.log('Wordlength: ' + wordLength + ' = Add ' + addPoints[index] + ' pts');
+        console.log('Add ' + addPoints[index]);
+        pointingStatus = `+${addPoints[index]} points`;
+    } else {
+        controller.score -= lossPoints[index];
+        //console.log('Wordlength: ' + wordLength + ' = Loss ' + lossPoints[index] + ' pts');
+        console.log('Loss ' + lossPoints[index]);
+        pointingStatus = `-${lossPoints[index]} points`;
+    }
+
+    pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
+    scoreElementID.innerHTML = `<p>Score: ${controller.score}</p>`;
 }
 
 function gameOver() {
@@ -373,7 +242,7 @@ function gameOver() {
 
 function resetGame() {
     controller = new gameController(canvas);
-    // controller.resetModifiers();
+
     setTimeout(controller.addWord, 1000);
     requestAnimationFrame(mainLoop);
 
@@ -381,15 +250,6 @@ function resetGame() {
     for (var i = 0; i < temp.length; i++) {
         temp[i].className = "menu-text text-center fadeOut";
     }
-
-}
-
-function useClear(gameController) {
-    gameController.clearChance = gameController.clearChance / 2;
-    gameController.clears--;
-    controller.wordContainer = []; //Empty the whole dang container
-    gameController.buffer = ''; //Reset buffer
-    // gameController.resetModifiers();
 }
 
 
@@ -405,38 +265,6 @@ then = Date.now();
 startTime = then;
 
 mainLoop();
-
-
-
-/* ----------------- Utility Functions ----------------*/
-
-// function getWidth() { //This function finds the width of the browser window... since it is different for all browsers
-//     if (self.innerWidth) {
-//         return self.innerWidth;
-//     }
-
-//     if (document.documentElement && document.documentElement.clientWidth) {
-//         return document.documentElement.clientWidth;
-//     }
-
-//     if (document.body) {
-//         return document.body.clientWidth;
-//     }
-// }
-
-// function getHeight() { //This function finds the height of the browser window... since it is different for all browsers
-//     if (self.innerHeight) {
-//         return self.innerHeight;
-//     }
-
-//     if (document.documentElement && document.documentElement.clientHeight) {
-//         return document.documentElement.clientHeight;
-//     }
-
-//     if (document.body) {
-//         return document.body.clientHeight;
-//     }
-// }
 
 function clear(canvas, fillstyle) {
     var ctx = canvas.getContext("2d");
@@ -462,100 +290,35 @@ document.onkeypress = function(evt) { // This function will run when any k ey is
         useClear(controller);
     }
 
-    if (evt.keyCode == 13) {
-        console.log('ENTER');
+    if (evt.keyCode == 13) { //ENTER key
         getWord();
     }
 };
 
-// function updateWords(gameController) {
-//     var wordsArr = gameController.wordContainer;
-
-//     for (var i = 0; i < wordsArr.length; i++) {
-//         var currentWord = wordsArr[i];
-//         if (currentWord === undefined) {
-//             return; //Catch errors
-//         }
-//         if (currentWord.text == gameController.buffer) { // If complete buffer word found in array
-//             wordsArr.splice(i, 1);
-//             console.log(currentWord.text + ' = ' + currentWord.text.length);
-//             //gameController.score += currentWord.value * gameController.scoreMultiplier; // get the char lenght as score
-//             gameController.wpm += (currentWord.value / 10);
-//             // if (gameController.buffer == "CLEAR") {
-//             //     gameController.clears++;
-//             // }
-//             // if (gameController.buffer == "MODIFIER") {
-//             //     gameController.modChance = 0;
-//             //     // randomModifier(gameController);
-//             // }
-//             updateScore(currentWord.text.length, gameController, 1);
-//             currentWord.text = '';
-//             //console.log("Buffer: " + gameController.buffer);
-//             gameController.buffer = ''; //Reset buffer
-//             return;
-//         } else {
-//             //console.log("Buffer: " + gameController.buffer);
-//         }
-//     }
-// }
-
-
 function getWord() {
     var inputValue = inputElementID.value.toLowerCase();
-    //console.log(inputValue);
 
     var wordsArrText = controller.wordTextContainer;
     var wordsArr = controller.wordContainer;
 
-    for (var i = 0; i < wordsArr.length; i++) {
-        var currentWord = wordsArr[i];
-        if (currentWord === undefined) {
-            return; //Catch errors
-        }
-        if (currentWord.text === inputValue.trim()) { // If complete buffer word found in array
-            wordsArr.splice(i, 1);
-            console.log(currentWord.text + ' = ' + currentWord.text.length);
-            //gameController.score += currentWord.value * gameController.scoreMultiplier; // get the char lenght as score
-            gameController.wpm += (currentWord.value / 10);
-            // if (gameController.buffer == "CLEAR") {
-            //     gameController.clears++;
-            // }
-            // if (gameController.buffer == "MODIFIER") {
-            //     gameController.modChance = 0;
-            //     // randomModifier(gameController);
-            // }
-            updateScore(currentWord.text.length, 1);
-            currentWord.text = '';
-            inputElementID.value = '';
-            //console.log("Buffer: " + gameController.buffer);
-            //gameController.buffer = ''; //Reset buffer
-            return;
-        } else {
-            inputElementID.value = '';
-            updateScore(currentWord.text.length, 0);
-            return;
-            //console.log("Buffer: " + gameController.buffer);
-        }
+    console.log(JSON.stringify(wordsArrText));
+    console.log(JSON.stringify(wordsArr));
+
+    var pos = wordsArr.findIndex(i => i.text === inputValue);
+
+    if (wordsArrText.includes(inputValue.trim())) { // If complete buffer word found in array
+        wordsArrText.splice(wordsArrText.indexOf(inputValue), 1);
+        wordsArr.splice(pos, 1);
+
+        updateScore(inputValue.length, 1);
+        inputElementID.value = '';
+        return;
+    } else {
+        inputElementID.value = '';
+        updateScore(inputValue.length, 0);
+        return;
     }
-
-    //console.log(controller.wordTextContainer.length);
-
-
 }
-
-//* function getWord() {
-//     var inputValue = inputElementID.value.toLowerCase();
-//     //console.log(inputValue);
-
-//     var wordsArrText = controller.wordTextContainer;
-//     if (wordsArrText.includes(inputValue)) {
-//         console.log(inputValue + " is included in array");
-//     } else {
-//         console.log(inputValue + " is NOT included in array");
-//     }
-//     //console.log(controller.wordTextContainer.length);
-//     inputElementID.value = '';
-// }
 
 function addKeyToBuffer(char) {
     var wordsArr = controller.wordContainer;
@@ -569,146 +332,4 @@ function addKeyToBuffer(char) {
     }
 
     if (debugFlag) { console.log("Not adding: " + char + " to the buffer;"); }
-}
-
-// function rain() {
-//     this.drops = [];
-// }
-
-// function drop(x, y) {
-//     this.x = x;
-//     this.y = y;
-// }
-
-
-/* ------------------ Modifiers!!! -------------------*/
-// function randomModifier(gameController) {
-//     var modifierAmt = 7;
-
-//     var selection = Math.random() * modifierAmt;
-
-//     if (selection <= 1) { // Doubletime!
-//         gameController.doubleTime = !gameController.doubleTime;
-//     }
-//     if (selection > 1 && selection <= 2) { // Slow Mo!
-//         gameController.slowMo = !gameController.slowMo;
-//     }
-//     if (selection > 2 && selection <= 3) { // Downpour!
-//         gameController.downpour = !gameController.downpour;
-//         if (gameController.downpour) { downpour(true); } else { downpour(false); }
-//     }
-//     if (selection > 3 && selection <= 4) { // Cascade!
-//         gameController.cascade = !gameController.cascade;
-//     }
-//     if (selection > 4 && selection <= 5) { // Overload!
-//         gameController.overload = !gameController.overload;
-//     }
-//     if (selection > 5 && selection <= 6) { // Blur!!
-//         gameController.blur = !gameController.blur;
-//     }
-//     if (selection > 6 && selection <= 7) { // upPour!!
-//         gameController.upPour = !gameController.upPour;
-//     }
-// }
-
-
-
-// Rain functions
-if (canvas.getContext) {
-    var ctx = canvas.getContext('2d');
-    var w = canvas.width;
-    var h = canvas.height;
-    ctx.strokeStyle = 'rgba(174,194,224,0.5)';
-    ctx.lineWidth = 1;
-    ctx.lineCap = 'round';
-
-
-    var init = [];
-    var maxParts = 200;
-    for (var a = 0; a < maxParts; a++) {
-        init.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            l: Math.random() * 1,
-            xs: -4 + Math.random() * 4 + 2,
-            ys: Math.random() * 10 + 10
-        })
-    }
-
-    function downpour(boolean) {
-        if (boolean) {
-            for (var a = 0; a < 1000; a++) {
-                init.push({
-                    x: Math.random() * w,
-                    y: Math.random() * h,
-                    l: Math.random() * 1,
-                    xs: -4 + Math.random() * 4 + 2,
-                    ys: Math.random() * 10 + 10
-                })
-            }
-            particles = [];
-            for (var b = 0; b < 1000; b++) {
-                particles[b] = init[b];
-            }
-        } else {
-            if (init.length > 200) {
-                for (var a = 0; a < 1000; a++) {
-                    init.pop();
-                }
-            }
-
-            particles = [];
-            for (var b = 0; b < maxParts; b++) {
-                particles[b] = init[b];
-            }
-        }
-
-    }
-
-
-    var particles = [];
-    for (var b = 0; b < maxParts; b++) {
-        particles[b] = init[b];
-    }
-
-    // function rainDraw() {
-    //     for (var c = 0; c < particles.length; c++) {
-    //         var p = particles[c];
-    //         ctx.strokeStyle = "#0055FF";
-    //         if (controller.overload) {
-    //             ctx.strokeStyle = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
-    //         }
-    //         ctx.beginPath();
-    //         ctx.moveTo(p.x, p.y);
-    //         if (controller.upPour) {
-    //             ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * (-1 * p.ys));
-    //         } else {
-    //             ctx.lineTo(p.x + p.l * p.xs, p.y + p.l * p.ys);
-    //         }
-    //         ctx.stroke();
-    //     }
-    //     rainMove();
-    // }
-
-    // function rainMove() {
-    //     for (var b = 0; b < particles.length; b++) {
-    //         var p = particles[b];
-    //         p.x += p.xs;
-
-    //         if (controller.upPour) {
-    //             p.y -= p.ys;
-    //             if (p.x > w || p.y < 0) {
-    //                 p.x = Math.random() * w;
-    //                 p.y = h + 20;
-    //             }
-    //         } else {
-    //             p.y += p.ys;
-    //             if (p.x > w || p.y > h) {
-    //                 p.x = Math.random() * w;
-    //                 p.y = -20;
-    //             }
-    //         }
-
-    //     }
-    // }
 }
