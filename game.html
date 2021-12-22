@@ -3,67 +3,73 @@
 
 <head>
 
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Vendor CSS Files -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Custom CSS Files -->
-  <link rel="stylesheet" href="css/global.css" />
-  <link rel="stylesheet" href="css/game.css" />
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/game.css" />
 
-  <title>Comet of Words | Gameplay</title>
+    <title>Comet of Words | Gameplay</title>
 
 </head>
 
 <body>
 
-  <main>
+    <main>
 
-    <div class="d-flex flex-wrap p-4">
+        <div class="d-flex flex-wrap p-4">
 
-      <div class="col-12 d-flex align-self-end justify-content-between mb-5">
-        <!-- Logo -->
-        <div class="col-2">
-          <a href="index.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+            <div class="col-12 d-flex align-self-end justify-content-between mb-5">
+                <!-- Logo -->
+                <div class="col-2">
+                    <a href="index.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
                 src="images/game_logo.png" alt=""></button></a>
-        </div>
+                </div>
 
-        <div id="Score" class="h1 pe-5">Score</div>
-      </div>
+                <div id="Score" class="h1 score pe-5">Score: 0</div>
+            </div>
 
-      <div class="col-12 d-flex align-self-center justify-content-center" id="start_play">
-        <h1>
-          Press SPACEBAR to play
-        </h1>
-      </div>
+            <div class="col-12 d-flex align-self-center justify-content-center" id="start_play">
+                <h1>
+                    Press SPACEBAR to play
+                </h1>
+            </div>
 
-      <!-- Hidden Images for Canvas -->
-      <!-- <img id="asteroid-1" src="images/asteroid-1.png" width="25" height="25"> -->
-      <!-- <img id="asteroid-2" src="images/asteroid-2.png" width="25" height="25">
+            <!-- Hidden Images for Canvas -->
+            <!-- <img id="asteroid-1" src="images/asteroid-1.png" width="25" height="25"> -->
+            <!-- <img id="asteroid-2" src="images/asteroid-2.png" width="25" height="25">
       <img id="asteroid-3" src="images/asteroid-3.png" width="25" height="25">
       <img id="asteroid-4" src="images/asteroid-4.png" width="25" height="25">
       <img id="asteroid-5" src="images/asteroid-5.png" width="25" height="25">
       <img id="asteroid-6" src="images/asteroid-6.png" width="25" height="25"> -->
 
-      <div class="col-12 d-flex align-self-center justify-content-center">
-          <canvas id="canvas" width="900" height="700">
-            Your browser does not support the HTML 5 Canvas.
-          </canvas>
-      </div>
+            <div id="Pointing" class="h1 pointing pe-5">Pointing</div>
+            <div class="col-12 d-flex align-self-center justify-content-center">
+                <canvas id="canvas" width="900" height="700">
+                     Your browser does not support the HTML 5 Canvas.
+                </canvas>
+            </div>
 
-    </div>
+            <div class="form-group col-5 d-flex align-self-end justify-content-center">
+                <input type="text" autocomplete="off" id="InputWord" class="form-control form-control-lg" placeholder="Enter text" autofocus />
 
-  </main>
+            </div>
 
-  <!-- Vendor JS Files -->
-  <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+        </div>
 
-  <!-- Custom JS Files -->
-  <script src="js/app.js"></script>
-  <script src="js/words.js"></script>
+    </main>
+
+    <!-- Vendor JS Files -->
+    <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+
+    <!-- Custom JS Files -->
+    <script src="js/app.js"></script>
+    <script src="js/words.js"></script>
 
 </body>
 
