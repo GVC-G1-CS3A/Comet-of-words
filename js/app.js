@@ -22,6 +22,7 @@ const scoreElementClass = document.getElementsByClassName('score');
 const pointingElementID = document.getElementById('Pointing');
 const pointingElementClass = document.getElementsByClassName('pointing');
 const inputElementID = document.getElementById('InputWord');
+const livesLeft = document.getElementById('Lives');
 
 function debugLog() {
     console.log("Debug Logged!");
@@ -41,7 +42,7 @@ function gameController(canvas) {
     this.currentWord = '';
     //this.buffer = '';
     this.score = 0;
-    this.health = 100;
+    this.health = 5;
     this.clears = 0;
     this.clearChance = 5;
     this.modChance = 5;
@@ -56,7 +57,7 @@ function wordObj(text, x, y) {
     this.speed = (Math.random() * (controller.score / 100)) + 1; //Using globals again... (Laziness > desire for good practice) : True
 }
 
-gameController.prototype.addWord = function() {
+gameController.prototype.addWord = function () {
     if (this == window) {
         var that = controller; //SUPER HOKEY way to avoid setTimeout from using global window context...
     } else {
@@ -116,8 +117,6 @@ function updatePositions(gameController) {
     var wordsArr = gameController.wordContainer;
     var wordsArrText = gameController.wordTextContainer;
     var multiplier = 1.0;
-    if (gameController.doubleTime) { multiplier = multiplier * 1.25; }
-    if (gameController.slowMo) { multiplier = multiplier / 2; }
 
     for (var i = 0; i < wordsArr.length; i++) {
         var currentWord = wordsArr[i];
@@ -129,10 +128,12 @@ function updatePositions(gameController) {
 
         // word if it reaches the bottom
         if (currentWord.y >= gameController.canvas.height - 10) {
-            gameController.health -= currentWord.value;
+            gameController.health -= 1;
             wordsArr.splice(i, 1);
             wordsArrText.splice(i, 1);
             if (currentWord.text.startsWith(gameController.buffer)) { gameController.buffer = ''; } //Only reset buffer if it is current word
+            // Decrease Life
+            if (gameController.health >= 0) {   lives(gameController.health);   }
         }
     }
 }
@@ -146,16 +147,6 @@ function draw(gameController) {
     ctx.strokeStyle = '#FFFFFF';
     ctx.fillStyle = 'white';
 
-    asteroid1.onload = function() {
-        ctx.drawImage(asteroid1, 20, 20);
-        console.log("draw image");
-    }
-
-    if (gameController.blur) { canvas.style.webkitFilter = "blur(2px)"; } //Blur effect!
-    else {
-        canvas.style.webkitFilter = "blur(0px)"; //Blur effect!
-    }
-
     var wordsArr = gameController.wordContainer;
     for (var i = 0; i < wordsArr.length; i++) {
         var currentWord = wordsArr[i];
@@ -166,11 +157,6 @@ function draw(gameController) {
 
         ctx.strokeText(currentWord.text, currentWord.x, currentWord.y);
 
-        if (currentWord.text == "CLEAR") {
-            ctx.fillStyle = '#0000FF';
-            ctx.fillText(currentWord.text, currentWord.x, currentWord.y);
-            ctx.fillStyle = '#FF0000';
-        }
         if (currentWord.text.startsWith(gameController.buffer)) { //Fill characters of words matching buffer...
             ctx.fillText(gameController.buffer, currentWord.x, currentWord.y);
         }
@@ -181,11 +167,7 @@ function draw(gameController) {
 
     }
 
-    //Health bar
-    ctx.fillStyle = "green";
-    ctx.fillRect(10, gameController.canvas.height - 75, (gameController.health / 100) * (gameController.canvas.width - 40), 35);
     ctx.fillStyle = "#111111"; //Set back for clearing screen? Doesn't work if we dont do this...
-
     if (debugDrawFlag) { console.log("Draw Complete.") }
 
 }
@@ -220,20 +202,23 @@ function updateScore(wordLength, status) {
     scoreElementID.innerHTML = `<p>Score: ${controller.score}</p>`;
 }
 
+function lives(livesLeft) {
+    document.getElementById(`heart-` + `${livesLeft}`).remove();
+}
+
 function gameOver() {
     clear(controller.canvas, '#111111');
     var canvas = controller.canvas;
     clear(canvas, '#111111'); //Clear the canvas
 
     var ctx = canvas.getContext('2d');
-    ctx.font = "60px Arial";
+    ctx.font = "50px Arial";
     ctx.strokeStyle = '#000000';
     ctx.fillStyle = '#BBBBBB';
 
-    var xCenter = (canvas.width / 2) - 250;
+    var xCenter = (canvas.width / 2) - 50;
     var yCenter = canvas.height / 2;
     ctx.fillText("Game Over!", xCenter, yCenter)
-    ctx.fillText("Score: " + controller.score, xCenter, yCenter + 75)
     ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150)
 
     controller.gameRunning = false;
@@ -273,7 +258,7 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
