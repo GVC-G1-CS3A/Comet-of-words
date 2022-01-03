@@ -1,20 +1,6 @@
 var debugFlag = false;
 var debugDrawFlag = false;
 
-var asteroid1 = new Image(25, 25);
-var asteroid2 = new Image(25, 25);
-var asteroid3 = new Image(25, 25);
-var asteroid4 = new Image(25, 25);
-var asteroid5 = new Image(25, 25);
-var asteroid6 = new Image(25, 25);
-
-asteroid1.src = "./images/asteroid-1.png";
-asteroid2.src = "./images/asteroid-2.png";
-asteroid3.src = "./images/asteroid-3.png";
-asteroid4.src = "./images/asteroid-4.png";
-asteroid5.src = "./images/asteroid-5.png";
-asteroid6.src = "./images/asteroid-6.png";
-
 //DOM ELEMENTS
 const start_play = document.getElementById("start_play");
 const scoreElementID = document.getElementById('Score');
@@ -133,7 +119,7 @@ function updatePositions(gameController) {
             wordsArrText.splice(i, 1);
             if (currentWord.text.startsWith(gameController.buffer)) { gameController.buffer = ''; } //Only reset buffer if it is current word
             // Decrease Life
-            if (gameController.health >= 0) {   lives(gameController.health);   }
+            if (gameController.health >= 0) { lives(gameController.health); }
         }
     }
 }
@@ -230,6 +216,15 @@ function resetGame() {
 
     setTimeout(controller.addWord, 1000);
     requestAnimationFrame(mainLoop);
+
+    for (i = 0; i <= 4; i++) {
+        var heart = new Image();
+            heart.src = "./images/heart.png" ;
+            heart.style.width = "35px";
+            heart.style.height = "30px";
+            heart.id = "heart-" + i;
+            livesLeft.appendChild(heart);
+    }
 
     var temp = document.getElementsByClassName("menu-text");
     for (var i = 0; i < temp.length; i++) {
