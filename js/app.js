@@ -1,20 +1,6 @@
 var debugFlag = false;
 var debugDrawFlag = false;
 
-var asteroid1 = new Image(25, 25);
-var asteroid2 = new Image(25, 25);
-var asteroid3 = new Image(25, 25);
-var asteroid4 = new Image(25, 25);
-var asteroid5 = new Image(25, 25);
-var asteroid6 = new Image(25, 25);
-
-asteroid1.src = "./images/asteroid-1.png";
-asteroid2.src = "./images/asteroid-2.png";
-asteroid3.src = "./images/asteroid-3.png";
-asteroid4.src = "./images/asteroid-4.png";
-asteroid5.src = "./images/asteroid-5.png";
-asteroid6.src = "./images/asteroid-6.png";
-
 //DOM ELEMENTS
 const start_play = document.getElementById("start_play");
 const scoreElementID = document.getElementById('Score');
@@ -40,7 +26,6 @@ function gameController(canvas) {
     this.wordContainer = []; //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     this.wordTextContainer = []; //text only
     this.currentWord = '';
-    //this.buffer = '';
     this.score = 0;
     this.health = 5;
     this.clears = 0;
@@ -54,12 +39,12 @@ function wordObj(text, x, y) {
     this.value = text.length;
     this.x = x;
     this.y = y;
-    this.speed = (Math.random() * (controller.score / 100)) + 1; //Using globals again... (Laziness > desire for good practice) : True
+    this.speed = (Math.random() * (controller.score / 100)) + 1; 
 }
 
 gameController.prototype.addWord = function () {
     if (this == window) {
-        var that = controller; //SUPER HOKEY way to avoid setTimeout from using global window context...
+        var that = controller; 
     } else {
         var that = this;
     }
@@ -76,7 +61,7 @@ gameController.prototype.addWord = function () {
 
     that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     that.wordTextContainer.push(word.text); //push ONLY the text properties of the object
-    //console.log(that.wordTextContainer.toString());
+    
 
     //Override time if not special
     timeUntilNextWord = ((60 / that.wpm) * 1000) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
@@ -85,13 +70,14 @@ gameController.prototype.addWord = function () {
         window.setTimeout(that.addWord, timeUntilNextWord); //Break our timer if game is over
     }
 
-    if (debugFlag) { console.log("Pushing word: " + word.text + " to gameController.") }
+    if (debugFlag) { 
+        // console.log("Pushing word: " + word.text + " to gameController.") 
+}
     return word;
 }
 
 /* -------------- Game Logic ---------------- */
 
-//Main program loop
 function mainLoop() {
     requestAnimationFrame(mainLoop);
     now = Date.now();
@@ -102,8 +88,8 @@ function mainLoop() {
         // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
         then = now - (elapsed % fpsInterval);
 
-        updatePositions(controller); //Update all word locations!
-        draw(controller); //Draw to the screen!
+        updatePositions(controller); //Update word locations
+        draw(controller); //Draw to the screen
         if (controller.health <= 0) { gameOver(); } //Run game over if health is 0
 
         if (controller.gameRunning) {
@@ -120,7 +106,7 @@ function updatePositions(gameController) {
 
     for (var i = 0; i < wordsArr.length; i++) {
         var currentWord = wordsArr[i];
-        if (currentWord === undefined) { //Catch errors
+        if (currentWord === undefined) { 
             return;
         }
 
@@ -133,7 +119,7 @@ function updatePositions(gameController) {
             wordsArrText.splice(i, 1);
             if (currentWord.text.startsWith(gameController.buffer)) { gameController.buffer = ''; } //Only reset buffer if it is current word
             // Decrease Life
-            if (gameController.health >= 0) {   lives(gameController.health);   }
+            if (gameController.health >= 0) { lives(gameController.health); }
         }
     }
 }
@@ -162,13 +148,15 @@ function draw(gameController) {
         }
 
         if (debugDrawFlag) {
-            console.log("Drawing " + currentWord.text + " @ " + currentWord.x + " , " + currentWord.y)
+            // console.log("Drawing " + currentWord.text + " @ " + currentWord.x + " , " + currentWord.y)
         }
 
     }
 
-    ctx.fillStyle = "#111111"; //Set back for clearing screen? Doesn't work if we dont do this...
-    if (debugDrawFlag) { console.log("Draw Complete.") }
+    ctx.fillStyle = "#111111"; //Set back for clearing screen
+    if (debugDrawFlag) { 
+        // console.log("Draw Complete.") 
+}
 
 }
 
@@ -183,18 +171,18 @@ function updateScore(wordLength, status) {
     } else {
         index = 2;
     }
-    console.log(wordLength);
+    // console.log(wordLength);
     var pointingStatus;
     //0=incorrect, 1=correct
     if (status == 1) {
         controller.score += addPoints[index];
         //console.log('Wordlength: ' + wordLength + ' = Add ' + addPoints[index] + ' pts');
-        console.log('Add ' + addPoints[index]);
+        // console.log('Add ' + addPoints[index]);
         pointingStatus = `+${addPoints[index]} points`;
     } else {
         controller.score -= lossPoints[index];
         //console.log('Wordlength: ' + wordLength + ' = Loss ' + lossPoints[index] + ' pts');
-        console.log('Loss ' + lossPoints[index]);
+        // console.log('Loss ' + lossPoints[index]);
         pointingStatus = `-${lossPoints[index]} points`;
     }
 
@@ -231,6 +219,15 @@ function resetGame() {
     setTimeout(controller.addWord, 1000);
     requestAnimationFrame(mainLoop);
 
+    for (i = 0; i <= 4; i++) {
+        var heart = new Image();
+            heart.src = "./images/heart.png" ;
+            heart.style.width = "35px";
+            heart.style.height = "30px";
+            heart.id = "heart-" + i;
+            livesLeft.appendChild(heart);
+    }
+
     var temp = document.getElementsByClassName("menu-text");
     for (var i = 0; i < temp.length; i++) {
         temp[i].className = "menu-text text-center fadeOut";
@@ -263,7 +260,9 @@ document.onkeypress = function (evt) { // This function will run when any k ey i
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
 
-    if (debugFlag) { console.log("Key pressed: " + charStr); }
+    if (debugFlag) { 
+        // console.log("Key pressed: " + charStr); 
+    }
 
     addKeyToBuffer(charStr);
 
@@ -286,8 +285,8 @@ function getWord() {
     var wordsArrText = controller.wordTextContainer;
     var wordsArr = controller.wordContainer;
 
-    console.log(JSON.stringify(wordsArrText));
-    console.log(JSON.stringify(wordsArr));
+    // console.log(JSON.stringify(wordsArrText));
+    // console.log(JSON.stringify(wordsArr));
 
     var pos = wordsArr.findIndex(i => i.text === inputValue);
 
@@ -311,10 +310,14 @@ function addKeyToBuffer(char) {
         var currentWord = wordsArr[i];
         if (currentWord.text.startsWith(controller.buffer + char)) { //If we drop in here, we have found a matching word to the buffer
             controller.buffer += char;
-            if (debugFlag) { console.log("Adding: " + char + " to the buffer. Buffer now: " + controller.buffer); }
+            if (debugFlag) { 
+                // console.log("Adding: " + char + " to the buffer. Buffer now: " + controller.buffer); 
+        }
             return controller.buffer;
         }
     }
 
-    if (debugFlag) { console.log("Not adding: " + char + " to the buffer;"); }
+    if (debugFlag) { 
+        // console.log("Not adding: " + char + " to the buffer;"); 
+    }
 }
