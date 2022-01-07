@@ -18,6 +18,7 @@ var startingMinutes = 1;
 var totalSeconds;
 var countDownInterval;
 var word;
+var x;
 
 var rageTimeSecStart = 2;
 var rageTimeSecEnd = 0;
@@ -76,10 +77,10 @@ gameController.prototype.addWord = function() {
 
     var timeUntilNextWord = ((60 / that.wpm) * 1000);
 
-    var x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
+    x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
 
     var wordToDisp = text.toLowerCase().trim();
-    word = new wordObj(wordToDisp, x, 30);
+    word = new wordObj(wordToDisp, x, 0);
 
     that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     that.wordTextContainer.push(word.text); //push ONLY the text properties of the object
@@ -93,7 +94,6 @@ gameController.prototype.addWord = function() {
     }
     return word;
 }
-
 
 
 /* -------------- Game Logic ---------------- */
@@ -117,6 +117,7 @@ function mainLoop() {
             start_play.innerText = "";
         }
     }
+
 }
 
 function updateCountdown() {
@@ -170,7 +171,13 @@ function draw(gameController) {
         }
         var text = currentWord.text;
 
+        //draw circle for every word drops
+        // ctx.beginPath();
+        // ctx.arc(currentWord.x + 50, currentWord.y, 30, 0, 2 * Math.PI);
+        // ctx.stroke();
+
         ctx.strokeText(currentWord.text, currentWord.x, currentWord.y);
+        ctx.drawImage(eval(getRandomComet(1, 6)), currentWord.x + 50, currentWord.y, 50, 50);
 
         if (currentWord.text.startsWith(gameController.buffer)) { //Fill characters of words matching buffer...
             ctx.fillText(gameController.buffer, currentWord.x, currentWord.y);
@@ -189,6 +196,11 @@ function draw(gameController) {
 
 }
 
+function getRandomComet(min, max) {
+    var num = Math.floor(Math.random() * max) + min;
+    return `asteroid${num}`;
+}
+
 function updateScore(wordLength, status) {
     const addPoints = [3, 4, 5];
     const lossPoints = [1, 2, 3];
@@ -200,22 +212,20 @@ function updateScore(wordLength, status) {
     } else {
         index = 2;
     }
-    // console.log(wordLength);
+
     var pointingStatus;
     //0=incorrect, 1=correct
     if (status == 1) {
         controller.score += addPoints[index];
-        //console.log('Wordlength: ' + wordLength + ' = Add ' + addPoints[index] + ' pts');
-        // console.log('Add ' + addPoints[index]);
-        pointingStatus = `+${addPoints[index]} points`;
+        pointingStatus = ` + $ { addPoints[index] }
+    points `;
     } else {
         controller.score -= lossPoints[index];
-        //console.log('Wordlength: ' + wordLength + ' = Loss ' + lossPoints[index] + ' pts');
-        // console.log('Loss ' + lossPoints[index]);
-        pointingStatus = `-${lossPoints[index]} points`;
+        pointingStatus = ` - $ { lossPoints[index] }
+    points `;
     }
 
-    pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
+    pointingElementID.innerHTML = ` < p > $ { pointingStatus } < /p>`;
     scoreElementID.innerHTML = `<p>Score: ${controller.score}</p>`;
 }
 
@@ -286,7 +296,23 @@ fpsInterval = 1000 / fps;
 then = Date.now();
 startTime = then;
 
-mainLoop();
+var asteroid1 = new Image();
+var asteroid2 = new Image();
+var asteroid3 = new Image();
+var asteroid4 = new Image();
+var asteroid5 = new Image();
+var asteroid6 = new Image();
+
+window.onload = function() {
+    asteroid1.src = './images/asteroid-1.png';
+    asteroid2.src = './images/asteroid-2.png';
+    asteroid3.src = './images/asteroid-3.png';
+    asteroid4.src = './images/asteroid-4.png';
+    asteroid5.src = './images/asteroid-5.png';
+    asteroid6.src = './images/asteroid-6.png';
+
+    mainLoop();
+}
 
 function clear(canvas, fillstyle) {
     var ctx = canvas.getContext("2d");
@@ -325,9 +351,6 @@ function getWord() {
 
     var wordsArrText = controller.wordTextContainer;
     var wordsArr = controller.wordContainer;
-
-    // console.log(JSON.stringify(wordsArrText));
-    // console.log(JSON.stringify(wordsArr));
 
     var pos = wordsArr.findIndex(i => i.text === inputValue);
 
