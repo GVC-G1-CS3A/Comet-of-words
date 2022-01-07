@@ -10,6 +10,18 @@ const pointingElementClass = document.getElementsByClassName('pointing');
 const inputElementID = document.getElementById('InputWord');
 const livesLeft = document.getElementById('Lives');
 
+const rageTimeElementID = document.getElementById('RageTime');
+const rageTimeElementClass = document.getElementsByClassName('ragetime');
+
+//globals
+var startingMinutes = 1;
+var totalSeconds;
+var countDownInterval;
+var word;
+
+var rageTimeSecStart = 2;
+var rageTimeSecEnd = 0;
+
 function debugLog() {
     console.log("Debug Logged!");
 }
@@ -22,7 +34,7 @@ function setupCanvas() {
 function gameController(canvas) {
     this.gameRunning = true;
     this.canvas = canvas;
-    this.wpm = 30;
+    this.wpm = 20;
     this.wordContainer = []; //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     this.wordTextContainer = []; //text only
     this.currentWord = '';
@@ -32,6 +44,8 @@ function gameController(canvas) {
     this.clearChance = 5;
     this.modChance = 5;
     this.scoreMultiplier = 1;
+
+    this.speed = 1000; //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
 }
 
 function wordObj(text, x, y) {
@@ -39,42 +53,48 @@ function wordObj(text, x, y) {
     this.value = text.length;
     this.x = x;
     this.y = y;
-    this.speed = (Math.random() * (controller.score / 100)) + 1; 
+    this.speed = (Math.random() * (controller.score / 100)) + 1; //the speed of gravity depends on the score
 }
 
-gameController.prototype.addWord = function () {
+gameController.prototype.addWord = function() {
     if (this == window) {
-        var that = controller; 
+        var that = controller;
     } else {
         var that = this;
     }
 
-    var timeUntilNextWord = ((60 / that.wpm) * 1000)
-
-
     var lengthOfArr = fullWordListArr.length;
     var text = fullWordListArr[Math.floor(Math.random() * lengthOfArr)]; //Grab a random word from wordlist in words.js
 
+
+    //will use for the boss rage if total seconds is 1
+    if (totalSeconds >= rageTimeSecEnd && totalSeconds <= rageTimeSecStart) {
+        that.wpm = 130; //activate RAGE
+    } else {
+        that.wpm = 20;
+    }
+
+    var timeUntilNextWord = ((60 / that.wpm) * 1000);
+
     var x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
 
-    var word = new wordObj(text.toLowerCase(), x, 30);
+    var wordToDisp = text.toLowerCase().trim();
+    word = new wordObj(wordToDisp, x, 30);
 
     that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     that.wordTextContainer.push(word.text); //push ONLY the text properties of the object
-    
-
-    //Override time if not special
-    timeUntilNextWord = ((60 / that.wpm) * 1000) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
 
     if (that.gameRunning) {
         window.setTimeout(that.addWord, timeUntilNextWord); //Break our timer if game is over
     }
 
-    if (debugFlag) { 
+    if (debugFlag) {
         // console.log("Pushing word: " + word.text + " to gameController.") 
-}
+    }
     return word;
 }
+
+
 
 /* -------------- Game Logic ---------------- */
 
@@ -99,6 +119,15 @@ function mainLoop() {
     }
 }
 
+function updateCountdown() {
+    rageTimeElementID.innerHTML = `Rage: 0:${String(totalSeconds).padStart(2,'0')}`; //implement formatted char (ex. 5 into 05)
+    if (totalSeconds <= 0) {
+        totalSeconds = (startingMinutes * 60) - 1;
+    } else {
+        totalSeconds--;
+    }
+}
+
 function updatePositions(gameController) {
     var wordsArr = gameController.wordContainer;
     var wordsArrText = gameController.wordTextContainer;
@@ -106,7 +135,7 @@ function updatePositions(gameController) {
 
     for (var i = 0; i < wordsArr.length; i++) {
         var currentWord = wordsArr[i];
-        if (currentWord === undefined) { 
+        if (currentWord === undefined) {
             return;
         }
 
@@ -154,9 +183,9 @@ function draw(gameController) {
     }
 
     ctx.fillStyle = "#111111"; //Set back for clearing screen
-    if (debugDrawFlag) { 
+    if (debugDrawFlag) {
         // console.log("Draw Complete.") 
-}
+    }
 
 }
 
@@ -195,6 +224,9 @@ function lives(livesLeft) {
 }
 
 function gameOver() {
+
+    clearInterval(countDownInterval);
+
     clear(controller.canvas, '#111111');
     var canvas = controller.canvas;
     clear(canvas, '#111111'); //Clear the canvas
@@ -204,10 +236,10 @@ function gameOver() {
     ctx.strokeStyle = '#000000';
     ctx.fillStyle = '#BBBBBB';
 
-    var xCenter = (canvas.width / 2) - 50;
-    var yCenter = canvas.height / 2;
-    ctx.fillText("Game Over!", xCenter, yCenter)
-    ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150)
+    var xCenter = (canvas.width / 3);
+    var yCenter = (canvas.height / 3);
+    ctx.fillText("Game Over!", xCenter, yCenter);
+    ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150);
 
     controller.gameRunning = false;
 
@@ -221,17 +253,20 @@ function resetGame() {
 
     for (i = 0; i <= 4; i++) {
         var heart = new Image();
-            heart.src = "./images/heart.png" ;
-            heart.style.width = "35px";
-            heart.style.height = "30px";
-            heart.id = "heart-" + i;
-            livesLeft.appendChild(heart);
+        heart.src = "./images/heart.png";
+        heart.style.width = "35px";
+        heart.style.height = "30px";
+        heart.id = "heart-" + i;
+        livesLeft.appendChild(heart);
     }
 
     var temp = document.getElementsByClassName("menu-text");
     for (var i = 0; i < temp.length; i++) {
         temp[i].className = "menu-text text-center fadeOut";
     }
+
+    totalSeconds = (startingMinutes * 60) - 1;
+    countDownInterval = setInterval(updateCountdown, 1000); // game begins
 }
 
 
@@ -255,12 +290,12 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
 
-    if (debugFlag) { 
+    if (debugFlag) {
         // console.log("Key pressed: " + charStr); 
     }
 
@@ -277,6 +312,7 @@ document.onkeypress = function (evt) { // This function will run when any k ey i
     if (evt.keyCode == 13) { //ENTER key
         getWord();
     }
+
 };
 
 function getWord() {
@@ -310,14 +346,14 @@ function addKeyToBuffer(char) {
         var currentWord = wordsArr[i];
         if (currentWord.text.startsWith(controller.buffer + char)) { //If we drop in here, we have found a matching word to the buffer
             controller.buffer += char;
-            if (debugFlag) { 
+            if (debugFlag) {
                 // console.log("Adding: " + char + " to the buffer. Buffer now: " + controller.buffer); 
-        }
+            }
             return controller.buffer;
         }
     }
 
-    if (debugFlag) { 
+    if (debugFlag) {
         // console.log("Not adding: " + char + " to the buffer;"); 
     }
 }
