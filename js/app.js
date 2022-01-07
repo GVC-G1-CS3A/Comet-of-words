@@ -236,10 +236,10 @@ function gameOver() {
     ctx.strokeStyle = '#000000';
     ctx.fillStyle = '#BBBBBB';
 
-    var xCenter = (canvas.width / 2) - 50;
-    var yCenter = canvas.height / 2;
-    ctx.fillText("Game Over!", xCenter, yCenter)
-    ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150)
+    var xCenter = (canvas.width / 3);
+    var yCenter = (canvas.height / 3);
+    ctx.fillText("Game Over!", xCenter, yCenter);
+    ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150);
 
     controller.gameRunning = false;
 
