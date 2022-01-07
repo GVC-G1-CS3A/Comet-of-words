@@ -34,7 +34,7 @@ function setupCanvas() {
 function gameController(canvas) {
     this.gameRunning = true;
     this.canvas = canvas;
-    this.wpm = 20;
+    this.wpm = 25;
     this.wordContainer = []; //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     this.wordTextContainer = []; //text only
     this.currentWord = '';
@@ -120,7 +120,7 @@ function mainLoop() {
 }
 
 function updateCountdown() {
-    rageTimeElementID.innerHTML = `Rage: 0:${String(totalSeconds).padStart(2,'0')}`; //implement formatted char (ex. 5 into 05)
+    rageTimeElementID.innerHTML = `Rage: 0:${String(totalSeconds).padStart(2, '0')}`; //implement formatted char (ex. 5 into 05)
     if (totalSeconds <= 0) {
         totalSeconds = (startingMinutes * 60) - 1;
     } else {
@@ -239,6 +239,7 @@ function gameOver() {
     var xCenter = (canvas.width / 3);
     var yCenter = (canvas.height / 3);
     ctx.fillText("Game Over!", xCenter, yCenter);
+    ctx.fillText(`Your Score is ${controller.score}`, xCenter, yCenter + 50);
     ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150);
 
     controller.gameRunning = false;
@@ -249,6 +250,7 @@ function resetGame() {
     controller = new gameController(canvas);
 
     setTimeout(controller.addWord, 1000);
+    controller.score = 0;
     requestAnimationFrame(mainLoop);
 
     for (i = 0; i <= 4; i++) {
@@ -264,6 +266,9 @@ function resetGame() {
     for (var i = 0; i < temp.length; i++) {
         temp[i].className = "menu-text text-center fadeOut";
     }
+
+    pointingElementID.innerHTML = "";
+    scoreElementID.innerHTML = `<p>Score: 0</p>`;
 
     totalSeconds = (startingMinutes * 60) - 1;
     countDownInterval = setInterval(updateCountdown, 1000); // game begins
