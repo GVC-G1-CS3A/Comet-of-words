@@ -17,6 +17,10 @@ const rageTimeElementClass = document.getElementsByClassName('ragetime');
 var startingMinutes = 1;
 var totalSeconds;
 var countDownInterval;
+var word;
+
+var rageTimeSecStart = 2;
+var rageTimeSecEnd = 0;
 
 function debugLog() {
     console.log("Debug Logged!");
@@ -30,7 +34,7 @@ function setupCanvas() {
 function gameController(canvas) {
     this.gameRunning = true;
     this.canvas = canvas;
-    this.wpm = 30;
+    this.wpm = 20;
     this.wordContainer = []; //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     this.wordTextContainer = []; //text only
     this.currentWord = '';
@@ -49,7 +53,7 @@ function wordObj(text, x, y) {
     this.value = text.length;
     this.x = x;
     this.y = y;
-    this.speed = (Math.random() * (-1 / 100)) + 1; //the speed of gravity depends on the score
+    this.speed = (Math.random() * (controller.score / 100)) + 1; //the speed of gravity depends on the score
 }
 
 gameController.prototype.addWord = function() {
@@ -59,42 +63,26 @@ gameController.prototype.addWord = function() {
         var that = this;
     }
 
+    var lengthOfArr = fullWordListArr.length;
+    var text = fullWordListArr[Math.floor(Math.random() * lengthOfArr)]; //Grab a random word from wordlist in words.js
+
+
     //will use for the boss rage if total seconds is 1
-    if (totalSeconds >= 55 && totalSeconds <= 58) {
-        that.wpm = 130;
+    if (totalSeconds >= rageTimeSecEnd && totalSeconds <= rageTimeSecStart) {
+        that.wpm = 130; //activate RAGE
     } else {
-        that.wpm = 30;
+        that.wpm = 20;
     }
 
     var timeUntilNextWord = ((60 / that.wpm) * 1000);
 
-    // if (totalSeconds >= 0 && totalSeconds <= 1) {
-    //     timeUntilNextWord = ((60 / that.wpm) * 1000);
-    // } else {
-    //     timeUntilNextWord = ((60 / that.wpm) * that.speed) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
-    // }
-    // timeUntilNextWord = ((60 / that.wpm) * that.speed) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
-
-
-    var lengthOfArr = fullWordListArr.length;
-    var text = fullWordListArr[Math.floor(Math.random() * lengthOfArr)]; //Grab a random word from wordlist in words.js
-
     var x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
 
-    var word = new wordObj(text.toLowerCase().trim(), x, 30);
+    var wordToDisp = text.toLowerCase().trim();
+    word = new wordObj(wordToDisp, x, 30);
 
     that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     that.wordTextContainer.push(word.text); //push ONLY the text properties of the object
-
-    // if (totalSeconds >= 0 && totalSeconds <= 1) {
-    //     timeUntilNextWord = (300);
-    // } else {
-    //     timeUntilNextWord = ((60 / that.wpm) * that.speed) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
-    // }
-    // timeUntilNextWord = ((60 / that.wpm) * that.speed) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
-
-    //Override time if not special
-    //timeUntilNextWord = ((60 / that.wpm) * 1000) + (100 * word.text.length); //In milliseconds, so 60 seconds / words per minute, * 1000 milliseconds/sec
 
     if (that.gameRunning) {
         window.setTimeout(that.addWord, timeUntilNextWord); //Break our timer if game is over
@@ -105,6 +93,8 @@ gameController.prototype.addWord = function() {
     }
     return word;
 }
+
+
 
 /* -------------- Game Logic ---------------- */
 
@@ -130,10 +120,9 @@ function mainLoop() {
 }
 
 function updateCountdown() {
-    rageTimeElementID.innerHTML = `Rage: 0:${totalSeconds}`;
+    rageTimeElementID.innerHTML = `Rage: 0:${String(totalSeconds).padStart(2,'0')}`; //implement formatted char (ex. 5 into 05)
     if (totalSeconds <= 0) {
         totalSeconds = (startingMinutes * 60) - 1;
-        //totalSeconds = 10;
     } else {
         totalSeconds--;
     }
