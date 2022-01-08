@@ -23,6 +23,9 @@ var x;
 var rageTimeSecStart = 2;
 var rageTimeSecEnd = 0;
 
+var centerPointWidth = 10;
+var centerPointHeight = 10;
+
 function debugLog() {
     console.log("Debug Logged!");
 }
@@ -57,7 +60,7 @@ function wordObj(text, x, y) {
     this.speed = (Math.random() * (controller.score / 100)) + 1; //the speed of gravity depends on the score
 }
 
-gameController.prototype.addWord = function() {
+gameController.prototype.addWord = function () {
     if (this == window) {
         var that = controller;
     } else {
@@ -163,6 +166,14 @@ function draw(gameController) {
     ctx.strokeStyle = '#FFFFFF';
     ctx.fillStyle = 'white';
 
+    ctx.beginPath();
+    ctx.strokeStyle = "#FFFF00";
+    ctx.lineCap = "round";
+    ctx.moveTo(30, 770);
+    ctx.lineTo(870, 770);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
     var wordsArr = gameController.wordContainer;
     for (var i = 0; i < wordsArr.length; i++) {
         var currentWord = wordsArr[i];
@@ -177,7 +188,7 @@ function draw(gameController) {
         // ctx.stroke();
 
         ctx.strokeText(currentWord.text, currentWord.x, currentWord.y);
-        ctx.drawImage(eval(getRandomComet(1, 6)), currentWord.x + 50, currentWord.y, 50, 50);
+        ctx.drawImage(asteroid5, currentWord.x + 50, currentWord.y, 50, 50);
 
         if (currentWord.text.startsWith(gameController.buffer)) { //Fill characters of words matching buffer...
             ctx.fillText(gameController.buffer, currentWord.x, currentWord.y);
@@ -196,11 +207,6 @@ function draw(gameController) {
 
 }
 
-function getRandomComet(min, max) {
-    var num = Math.floor(Math.random() * max) + min;
-    return `asteroid${num}`;
-}
-
 function updateScore(wordLength, status) {
     const addPoints = [3, 4, 5];
     const lossPoints = [1, 2, 3];
@@ -217,15 +223,16 @@ function updateScore(wordLength, status) {
     //0=incorrect, 1=correct
     if (status == 1) {
         controller.score += addPoints[index];
-        pointingStatus = ` + $ { addPoints[index] }
+        pointingStatus = ` + ${addPoints[index]}
     points `;
-    } else {
+    }
+    else {
         controller.score -= lossPoints[index];
-        pointingStatus = ` - $ { lossPoints[index] }
+        pointingStatus = ` - ${lossPoints[index]}
     points `;
     }
 
-    pointingElementID.innerHTML = ` < p > $ { pointingStatus } < /p>`;
+    pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
     scoreElementID.innerHTML = `<p>Score: ${controller.score}</p>`;
 }
 
@@ -246,11 +253,11 @@ function gameOver() {
     ctx.strokeStyle = '#000000';
     ctx.fillStyle = '#BBBBBB';
 
-    var xCenter = (canvas.width / 3);
-    var yCenter = (canvas.height / 3);
+    var xCenter = (canvas.width / 2) - (canvas.width / 7);
+    var yCenter = (canvas.height / 2) - (canvas.height / 8);
     ctx.fillText("Game Over!", xCenter, yCenter);
-    ctx.fillText(`Your Score is ${controller.score}`, xCenter, yCenter + 50);
-    ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150);
+    ctx.fillText(`Your Score is ${controller.score}`, xCenter - 40, yCenter + 100);
+    ctx.fillText("Press <Spacebar> to continue", xCenter - 230, yCenter + 180);
 
     controller.gameRunning = false;
 
@@ -296,20 +303,10 @@ fpsInterval = 1000 / fps;
 then = Date.now();
 startTime = then;
 
-var asteroid1 = new Image();
-var asteroid2 = new Image();
-var asteroid3 = new Image();
-var asteroid4 = new Image();
 var asteroid5 = new Image();
-var asteroid6 = new Image();
 
-window.onload = function() {
-    asteroid1.src = './images/asteroid-1.png';
-    asteroid2.src = './images/asteroid-2.png';
-    asteroid3.src = './images/asteroid-3.png';
-    asteroid4.src = './images/asteroid-4.png';
+window.onload = function () {
     asteroid5.src = './images/asteroid-5.png';
-    asteroid6.src = './images/asteroid-6.png';
 
     mainLoop();
 }
@@ -321,7 +318,7 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
