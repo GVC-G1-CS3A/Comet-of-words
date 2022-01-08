@@ -18,9 +18,13 @@ var startingMinutes = 1;
 var totalSeconds;
 var countDownInterval;
 var word;
+var x;
 
 var rageTimeSecStart = 2;
 var rageTimeSecEnd = 0;
+
+var centerPointWidth = 10;
+var centerPointHeight = 10;
 
 function debugLog() {
     console.log("Debug Logged!");
@@ -34,7 +38,7 @@ function setupCanvas() {
 function gameController(canvas) {
     this.gameRunning = true;
     this.canvas = canvas;
-    this.wpm = 20;
+    this.wpm = 25;
     this.wordContainer = []; //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     this.wordTextContainer = []; //text only
     this.currentWord = '';
@@ -56,7 +60,7 @@ function wordObj(text, x, y) {
     this.speed = (Math.random() * (controller.score / 100)) + 1; //the speed of gravity depends on the score
 }
 
-gameController.prototype.addWord = function() {
+gameController.prototype.addWord = function () {
     if (this == window) {
         var that = controller;
     } else {
@@ -76,10 +80,10 @@ gameController.prototype.addWord = function() {
 
     var timeUntilNextWord = ((60 / that.wpm) * 1000);
 
-    var x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
+    x = Math.floor(Math.random() * (that.canvas.width - 300)); //Grab random x coordinate within canvas
 
     var wordToDisp = text.toLowerCase().trim();
-    word = new wordObj(wordToDisp, x, 30);
+    word = new wordObj(wordToDisp, x, 0);
 
     that.wordContainer.push(word); //format of wordObj {text: 'fat', value: 3, x: 596, y: 30, speed: 1}
     that.wordTextContainer.push(word.text); //push ONLY the text properties of the object
@@ -93,7 +97,6 @@ gameController.prototype.addWord = function() {
     }
     return word;
 }
-
 
 
 /* -------------- Game Logic ---------------- */
@@ -117,10 +120,11 @@ function mainLoop() {
             start_play.innerText = "";
         }
     }
+
 }
 
 function updateCountdown() {
-    rageTimeElementID.innerHTML = `Rage: 0:${String(totalSeconds).padStart(2,'0')}`; //implement formatted char (ex. 5 into 05)
+    rageTimeElementID.innerHTML = `Rage: 0:${String(totalSeconds).padStart(2, '0')}`; //implement formatted char (ex. 5 into 05)
     if (totalSeconds <= 0) {
         totalSeconds = (startingMinutes * 60) - 1;
     } else {
@@ -162,6 +166,14 @@ function draw(gameController) {
     ctx.strokeStyle = '#FFFFFF';
     ctx.fillStyle = 'white';
 
+    ctx.beginPath();
+    ctx.strokeStyle = "#FFFF00";
+    ctx.lineCap = "round";
+    ctx.moveTo(30, 770);
+    ctx.lineTo(870, 770);
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
     var wordsArr = gameController.wordContainer;
     for (var i = 0; i < wordsArr.length; i++) {
         var currentWord = wordsArr[i];
@@ -170,7 +182,13 @@ function draw(gameController) {
         }
         var text = currentWord.text;
 
+        //draw circle for every word drops
+        // ctx.beginPath();
+        // ctx.arc(currentWord.x + 50, currentWord.y, 30, 0, 2 * Math.PI);
+        // ctx.stroke();
+
         ctx.strokeText(currentWord.text, currentWord.x, currentWord.y);
+        ctx.drawImage(asteroid5, currentWord.x + 50, currentWord.y, 50, 50);
 
         if (currentWord.text.startsWith(gameController.buffer)) { //Fill characters of words matching buffer...
             ctx.fillText(gameController.buffer, currentWord.x, currentWord.y);
@@ -200,19 +218,18 @@ function updateScore(wordLength, status) {
     } else {
         index = 2;
     }
-    // console.log(wordLength);
+
     var pointingStatus;
     //0=incorrect, 1=correct
     if (status == 1) {
         controller.score += addPoints[index];
-        //console.log('Wordlength: ' + wordLength + ' = Add ' + addPoints[index] + ' pts');
-        // console.log('Add ' + addPoints[index]);
-        pointingStatus = `+${addPoints[index]} points`;
-    } else {
+        pointingStatus = ` + ${addPoints[index]}
+    points `;
+    }
+    else {
         controller.score -= lossPoints[index];
-        //console.log('Wordlength: ' + wordLength + ' = Loss ' + lossPoints[index] + ' pts');
-        // console.log('Loss ' + lossPoints[index]);
-        pointingStatus = `-${lossPoints[index]} points`;
+        pointingStatus = ` - ${lossPoints[index]}
+    points `;
     }
 
     pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
@@ -236,10 +253,11 @@ function gameOver() {
     ctx.strokeStyle = '#000000';
     ctx.fillStyle = '#BBBBBB';
 
-    var xCenter = (canvas.width / 3);
-    var yCenter = (canvas.height / 3);
+    var xCenter = (canvas.width / 2) - (canvas.width / 7);
+    var yCenter = (canvas.height / 2) - (canvas.height / 8);
     ctx.fillText("Game Over!", xCenter, yCenter);
-    ctx.fillText("Press <Spacebar> to continue", xCenter - 250, yCenter + 150);
+    ctx.fillText(`Your Score is ${controller.score}`, xCenter - 40, yCenter + 100);
+    ctx.fillText("Press <Spacebar> to continue", xCenter - 230, yCenter + 180);
 
     controller.gameRunning = false;
 
@@ -249,6 +267,7 @@ function resetGame() {
     controller = new gameController(canvas);
 
     setTimeout(controller.addWord, 1000);
+    controller.score = 0;
     requestAnimationFrame(mainLoop);
 
     for (i = 0; i <= 4; i++) {
@@ -264,6 +283,9 @@ function resetGame() {
     for (var i = 0; i < temp.length; i++) {
         temp[i].className = "menu-text text-center fadeOut";
     }
+
+    pointingElementID.innerHTML = "";
+    scoreElementID.innerHTML = `<p>Score: 0</p>`;
 
     totalSeconds = (startingMinutes * 60) - 1;
     countDownInterval = setInterval(updateCountdown, 1000); // game begins
@@ -281,7 +303,13 @@ fpsInterval = 1000 / fps;
 then = Date.now();
 startTime = then;
 
-mainLoop();
+var asteroid5 = new Image();
+
+window.onload = function () {
+    asteroid5.src = './images/asteroid-5.png';
+
+    mainLoop();
+}
 
 function clear(canvas, fillstyle) {
     var ctx = canvas.getContext("2d");
@@ -290,7 +318,7 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
@@ -320,9 +348,6 @@ function getWord() {
 
     var wordsArrText = controller.wordTextContainer;
     var wordsArr = controller.wordContainer;
-
-    // console.log(JSON.stringify(wordsArrText));
-    // console.log(JSON.stringify(wordsArr));
 
     var pos = wordsArr.findIndex(i => i.text === inputValue);
 
