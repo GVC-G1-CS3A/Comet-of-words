@@ -60,7 +60,7 @@ function wordObj(text, x, y) {
     this.speed = (Math.random() * (controller.score / 100)) + 1; //the speed of gravity depends on the score
 }
 
-gameController.prototype.addWord = function () {
+gameController.prototype.addWord = function() {
     if (this == window) {
         var that = controller;
     } else {
@@ -223,8 +223,7 @@ function updateScore(wordLength, status) {
         controller.score += addPoints[index];
         pointingStatus = ` + ${addPoints[index]}
     points `;
-    }
-    else {
+    } else {
         controller.score -= lossPoints[index];
         pointingStatus = ` - ${lossPoints[index]}
     points `;
@@ -284,6 +283,7 @@ function resetGame() {
 
     pointingElementID.innerHTML = "";
     scoreElementID.innerHTML = `<p>Score: 0</p>`;
+    inputElementID.value = '';
 
     totalSeconds = (startingMinutes * 60) - 1;
     countDownInterval = setInterval(updateCountdown, 1000); // game begins
@@ -303,7 +303,7 @@ startTime = then;
 
 var asteroid5 = new Image();
 
-window.onload = function () {
+window.onload = function() {
     asteroid5.src = './images/asteroid-5.png';
 
     mainLoop();
@@ -316,7 +316,7 @@ function clear(canvas, fillstyle) {
 }
 
 
-document.onkeypress = function (evt) { // This function will run when any k ey is pressed!
+document.onkeypress = function(evt) { // This function will run when any k ey is pressed!
     evt = evt || window.event;
     var charCode = evt.keyCode || evt.which;
     var charStr = String.fromCharCode(charCode);
@@ -348,7 +348,6 @@ function getWord() {
     var wordsArr = controller.wordContainer;
 
     var pos = wordsArr.findIndex(i => i.text === inputValue);
-
     if (wordsArrText.includes(inputValue.trim())) { // If complete buffer word found in array
         wordsArrText.splice(wordsArrText.indexOf(inputValue), 1);
         wordsArr.splice(pos, 1);
