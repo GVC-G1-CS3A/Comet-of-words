@@ -1,42 +1,42 @@
 @font-face {
-  font-family: 'xengalaxy';
-  src: url('../font/xengalaxy.ttf');
+    font-family: 'xengalaxy';
+    src: url('../font/xengalaxy.ttf');
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 body {
-  font-family: 'xengalaxy';
-  color:white;
-  background-image: url('../images/game_background.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  min-height: min-content;
-  height: 100vh;
-  width: 100vw;
+    font-family: 'xengalaxy';
+    color: white;
+    background-image: url('../images/game_background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
+
 
 /* Buttons */
 
 .transparent {
-  border: none;
+    border: none;
 }
+
 
 /* Card */
 
 .card {
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  border-radius: 25px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    border-radius: 25px;
 }
+
 
 /* Game Background */
 
 #game_background_play {
-  background-image: url('../images/game_background_play.png');
+    background-image: url('../images/game_background_play.png');
 }
