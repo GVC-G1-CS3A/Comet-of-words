@@ -21,7 +21,7 @@
 
   <main>
 
-    <div class="d-flex flex-wrap p-4">
+    <div class="d-flex flex-wrap p-4 justify-content-center">
 
       <div class="col-12 d-flex align-self-end justify-content-between mb-5">
         <!-- Logo -->
@@ -38,32 +38,70 @@
         </h1>
       </div>
 
-      <div class="col-12 d-flex justify-content-center pt-3">
+      <div class="col-4 d-flex justify-content-center pt-3">
 
         <div class="card p-4  mx-3 text-dark">
-          <img class="card-img-top" src="images/screenshot-1.PNG" alt="Card image cap">
+          <img class="card-img-top rounded" src="images/screenshot-1.png" alt="Instruction">
           <div class="card-body p-4">
-            <p class="card-text">
-              Type all the letters that appears on the screen
+            <p class="card-text h4">
+              Type all the words that appears on the screen.
+              There is a yellow line at the bottom of the screen. <br>
+              DO NOT LET THE WORD REACHES THE BOTTOM AS MUCH AS POSSIBLE
             </p>
           </div>
         </div>
 
+      </div>
+
+      <div class="col-4 d-flex justify-content-center pt-3">
+
         <div class="card p-4  mx-3 text-dark">
-          <img class="card-img-top" src="images/screenshot-2.png" alt="Card image cap">
+          <img class="card-img-top rounded" src="images/screenshot-2.PNG" alt="Instruction">
           <div class="card-body p-4">
-            <p class="card-text">
-              Do not let the words reach the bottom line
+            <p class="card-text h4">
+              For every minute, rage mode will be activated. Bunch of words will fall at
+              the same time. <br>
+              MAKE SURE TO KEEP WATCH OF THE TIME
             </p>
           </div>
         </div>
 
+      </div>
+
+      <div class="col-4 d-flex justify-content-center pt-3">
+
         <div class="card p-4  mx-3 text-dark">
-          <img class="card-img-top" src="images/screenshot-3.PNG" alt="Card image cap">
+          <img class="card-img-top rounded" src="images/screenshot-3.PNG" alt="Instruction">
           <div class="card-body p-4">
             <p class="card-text">
-              Score will be deducted based on the length of the word
+              Score added and deducted will be based on the length of the word
             </p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col" class="h6">Word Length</th>
+                  <th scope="col" class="h6">Added Points</th>
+                  <th scope="col" class="h6">Loss Points</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" class="h6">Less than 5</th>
+                  <td>3</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="h6">Greater than 5, less than 9</th>
+                  <td>4</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="h6">Greater than or Equal to 9</th>
+                  <td>4</td>
+                  <td>3</td>
+                </tr>
+              </tbody>
+            </table>
             <div class="col-12 d-flex justify-content-end">
               <a href="game.html" class="btn btn-primary">Start the Game</a>
             </div>
