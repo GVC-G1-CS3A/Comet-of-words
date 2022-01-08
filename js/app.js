@@ -283,10 +283,12 @@ function resetGame() {
     }
 
     pointingElementID.innerHTML = "";
+    inputElementID.value = '';
     scoreElementID.innerHTML = `<p>Score: 0</p>`;
 
     totalSeconds = (startingMinutes * 60) - 1;
     countDownInterval = setInterval(updateCountdown, 1000); // game begins
+
 }
 
 
@@ -307,6 +309,7 @@ window.onload = function () {
     asteroid5.src = './images/asteroid-5.png';
 
     mainLoop();
+
 }
 
 function clear(canvas, fillstyle) {
