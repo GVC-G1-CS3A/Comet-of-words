@@ -26,9 +26,9 @@ var rageTimeSecEnd = 0;
 var centerPointWidth = 10;
 var centerPointHeight = 10;
 
-function debugLog() {
-    console.log("Debug Logged!");
-}
+// function debugLog() {
+//     console.log("Debug Logged!");
+// }
 
 function setupCanvas() {
     var canvas = document.getElementById("canvas");
@@ -106,7 +106,6 @@ function mainLoop() {
     now = Date.now();
     elapsed = now - then; // if enough time has elapsed, draw the next frame
     if (elapsed > fpsInterval) {
-        4
         // Get ready for next frame by setting then=now, but also adjust for 
         // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
         then = now - (elapsed % fpsInterval);
@@ -171,7 +170,6 @@ function draw(gameController) {
     ctx.lineCap = "round";
     ctx.moveTo(30, 770);
     ctx.lineTo(870, 770);
-    ctx.lineWidth = 2;
     ctx.stroke();
 
     var wordsArr = gameController.wordContainer;
