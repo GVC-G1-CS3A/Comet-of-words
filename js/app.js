@@ -13,6 +13,25 @@ const livesLeft = document.getElementById('Lives');
 const rageTimeElementID = document.getElementById('RageTime');
 const rageTimeElementClass = document.getElementsByClassName('ragetime');
 
+//music
+var bgMusicPlaying = new Audio('../music/One Piece GBA Soundtrack - Loguetown stage 2.webm');
+var bgMusicGameOver = new Audio('../music/05 - Game Over - The Legend Of Zelda The Minish Cap OST.webm');
+var bgMusicEarnPoints = new Audio('../music/point.mp3');
+var bgMusicLostPoints = new Audio('../music/not-point.mp3');
+
+bgMusicPlaying.volume = 0.2;
+bgMusicGameOver.volume = 0.2;
+bgMusicEarnPoints.volume = 0.2;
+bgMusicLostPoints.volume = 0.2;
+
+
+bgMusicPlaying.play();
+
+
+
+
+
+
 //globals
 var startingMinutes = 1;
 var totalSeconds;
@@ -223,10 +242,12 @@ function updateScore(wordLength, status) {
         controller.score += addPoints[index];
         pointingStatus = ` + ${addPoints[index]}
     points `;
+        bgMusicEarnPoints.play();
     } else {
         controller.score -= lossPoints[index];
         pointingStatus = ` - ${lossPoints[index]}
     points `;
+        bgMusicLostPoints.play();
     }
 
     pointingElementID.innerHTML = `<p>${pointingStatus}</p>`;
@@ -238,6 +259,10 @@ function lives(livesLeft) {
 }
 
 function gameOver() {
+    bgMusicPlaying.pause();
+    bgMusicPlaying.currentTime = 0;
+    bgMusicGameOver.play();
+
 
     clearInterval(countDownInterval);
 
@@ -261,6 +286,10 @@ function gameOver() {
 }
 
 function resetGame() {
+    bgMusicPlaying.play();
+    bgMusicGameOver.pause();
+    bgMusicGameOver.currentTime = 0;
+
     controller = new gameController(canvas);
 
     setTimeout(controller.addWord, 1000);

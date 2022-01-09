@@ -3,57 +3,63 @@
 
 <head>
 
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Vendor CSS Files -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Custom CSS Files -->
-  <link rel="stylesheet" href="css/global.css" />
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="css/global.css" />
 
-  <title>Comet of Words</title>
-  
+    <title>Comet of Words</title>
+
 </head>
 
 <body>
+    <audio src="music/Typing.com OST_ Typing Game (Keyboard Jump Theme).mp3" type="audio/mp3" loop autoplay hidden id="myaudio"></audio>
 
-  <main>
-    <div class="d-flex justify-content-center flex-wrap pt-5">
+    <main>
+        <div class="d-flex justify-content-center flex-wrap pt-5">
 
-      <!-- Logo -->
-      <div class="col-10 col-md-5 m-3">
-        <a href="index.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+            <!-- Logo -->
+            <div class="col-10 col-md-5 m-3">
+                <a href="index.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
               src="images/game_logo.png" alt=""></button></a>
-      </div>
+            </div>
 
-      <!-- Modes Button -->
-      <div class="col-12 d-flex justify-content-center mb-5">
+            <!-- Modes Button -->
+            <div class="col-12 d-flex justify-content-center mb-5">
 
-        <div class="col-10 col-md-5">
-          <a href="game.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+                <div class="col-10 col-md-5">
+                    <a href="game.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
                 src="images/game_button_play.png" alt=""></button></a>
-        </div>
+                </div>
 
-      </div>
+            </div>
 
-      <div class="col-12 d-flex justify-content-center">
+            <div class="col-12 d-flex justify-content-center">
 
-        <div class="col-10 col-md-5">
-          <a href="instructions.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
+                <div class="col-10 col-md-5">
+                    <a href="instructions.html"><button type="button" class="bg-transparent transparent"><img class="img-fluid"
                 src="images/game_button_instructions.png" alt=""></button></a>
+                </div>
+
+            </div>
+
         </div>
 
-      </div>
+    </main>
 
-    </div>
-
-  </main>
-
-  <!-- Vendor JS Files -->
-  <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- Vendor JS Files -->
+    <script src="vendor/bootstrap/js/bootstrap.bundle.js"></script>
 
 </body>
+
+<script>
+    var audio = document.getElementById("myaudio");
+    audio.volume = 0.2;
+</script>
 
 </html>
