@@ -12,10 +12,10 @@
 
 ## Game features
 
-- [ ] The player will have 5 lives that is useful only to the comets with those above 5 characters word
-- [ ] Rage fall of commets will happen every 1 minute (5-7 words)
-- [ ] Enemies have no formation
-- [ ] For every mistyping of letters from the target the word, the player’s score decremented
+- [ ] The player will have 5 lives that is useful only to the comets with those above 5 characters word.
+- [ ] Rage fall of commets will happen every 1 minute (5-7 words).
+- [ ] Enemies have no formation.
+- [ ] For every mistyping of letters from the target the word, the player’s score decremented.
 
 |      Words      | Gained | Loss  |
 |-----------------|--------|-------|
@@ -23,3 +23,4 @@
 | 5-8 letters     |  4 pts | 2 pts |
 | 9 letters above |  5 pts | 3 pts |
 
+__[Demo](https://nodeca.github.io/pica/demo/)__ of the game.
