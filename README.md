@@ -23,4 +23,4 @@
 | 5-8 letters     |  4 pts | 2 pts |
 | 9 letters above |  5 pts | 3 pts |
 
-__[Demo](https://nodeca.github.io/pica/demo/)__ of the game.
+__[Demo](https://commetofwords.netlify.app)__ of the game.
